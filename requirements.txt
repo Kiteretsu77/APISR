@@ -1,0 +1,20 @@
+# Relatively static library (These libraries are comparatively stable, so the version here can be versatile, we attached the version we used in the experiments)
+tqdm==4.66.1
+numpy==1.26.0
+torchsummary==1.5.1
+opencv-python==4.8.1.78
+scipy==1.11.3
+omegaconf==2.3.0
+fairscale==0.4.13
+timm==0.9.7
+pandas==2.1.1
+pillow==10.0.1
+requests==2.31.0
+pyyaml==6.0.1
+kornia==0.7.0
+tensorflow==2.14.0
+
+# Relatively dynamic library (We think that these libraries may frequenctly modify their API, so it is better to use the same version as belong)
+pyiqa==0.1.7
+pthflops==0.4.2
+pillow-heif==0.13.0
