@@ -90,12 +90,17 @@ sudo apt install ffmpeg
     python train_code/train.py --use_pretrained
     ```
 
-
+## Related Projects
+1. Fast Anime SR acceleration: https://github.com/Kiteretsu77/FAST_Anime_VSR \
+2. My previous paper (VCISR - WACV2024) as the baseline method: https://github.com/Kiteretsu77/VCISR-official 
 
 
 ## Citation
 Please cite us if our work is useful for your research.
 
+## Disclaimer
+This project is released for academic use only. We disclaim responsibility for the distribution of the dataset. Users are solely liable for their actions. 
+The project contributors are not legally affiliated with, nor accountable for, users' behaviors.
 
 
 ## License
