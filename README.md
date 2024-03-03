@@ -1,5 +1,5 @@
 # APISR (CVPR 2024)
- 📖 APISR: Anime Production Inspired Real-World Anime Super-Resolution
+ 📖 APISR: Anime Production Inspired Real-World Anime Super-Resolution\
 🔥 [Update](#Update) **|** 🔧 [Installation](#installation) **|** ⚡[Inference](#inference) **|** 🧩 [Dataset Curation](#dataset_curation) **|** 💻 [Train](#train)
 
 <!-- > [![paper](https://img.shields.io/badge/Paper-<COLOR>.svg)](https://openaccess.thecvf.com/content/WACV2024/papers/Wang_VCISR_Blind_Single_Image_Super-Resolution_With_Video_Compression_Synthetic_Data_WACV_2024_paper.pdf)<br> -->
