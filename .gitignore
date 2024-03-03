@@ -25,4 +25,5 @@ tmp/*
 *.csv
 
 !__assets__/lr_inputs/*
+!__assets__/*
 !requirements.txt
