@@ -1,15 +1,14 @@
 # APISR (CVPR 2024)
  📖 APISR: Anime Production Inspired Real-World Anime Super-Resolution\
-🔥 [Update](#Update) **|** 🔧 [Installation](#installation) **|** ⚡[Inference](#inference) **|** 🧩 [Dataset Curation](#dataset_curation) **|** 💻 [Train](#train)
+👀[**Visualization**](#Visualization)  **|** 🔥 [Update](#Update) **|** 🔧 [Installation](#installation) **|** ⚡[Inference](#inference) **|** 🧩 [Dataset Curation](#dataset_curation) **|** 💻 [Train](#train)
 
-<!-- > [![paper](https://img.shields.io/badge/Paper-<COLOR>.svg)](https://openaccess.thecvf.com/content/WACV2024/papers/Wang_VCISR_Blind_Single_Image_Super-Resolution_With_Video_Compression_Synthetic_Data_WACV_2024_paper.pdf)<br> -->
-Paper: Waiting for Arxiv \
+> [![Arxiv](https://img.shields.io/badge/Arxiv-<COLOR>.svg)](https://arxiv.org/abs/2403.01598)<br>
 :star: If you like APISR, please help star this repo. Thanks! :hugs:
 
 
 
 <!---------------------------------------- Visualization ---------------------------------------->
-## <a name="visualization"></a> Visualization (Zoom in for the best view!)
+## <a name="Visualization"></a> Visualization (Zoom in for the best view!) 👀
 
 <p align="center">
   <img src="__assets__/Anime_in_the_wild.png">
@@ -33,7 +32,7 @@ Paper: Waiting for Arxiv \
 
 AVC_RealLQ_comparison.png
 
-## <a name="installation"></a> Installation (Environment Preparation)
+## <a name="installation"></a> Installation 🔧
 
 ```shell
 git clone git@github.com:Kiteretsu77/APISR.git
@@ -55,7 +54,7 @@ sudo apt install ffmpeg
 
 
 
-## <a name="inference"></a> Inference
+## <a name="inference"></a> Inference ⚡⚡⚡
 1. Download the weight from https://drive.google.com/file/d/1Ubj-1f7gmi-dWlK_aUVcScZAlzKtuBJ8/view?usp=sharing and put it to "saved_models" folder
 2. Then, Execute 
     ```shell
@@ -65,14 +64,14 @@ sudo apt install ffmpeg
 
 
 
-## <a name="dataset_curation"></a> Dataset Curation
+## <a name="dataset_curation"></a> Dataset Curation 🧩
 1. All the dataset curation pipeline is under "dataset_curation_pipeline" folder. You can collect your own dataset by sending videos into the pipeline and get least compressed and the most informative images from the video sources. With a folder with video sources, you can execute the following to get a basic dataset:
 
     ```shell
     python dataset_curation_pipeline/collect.py --video_folder_dir XXXX --save_dir XXX
     ```
 
-## <a name="train"></a> Train (TBD)
+## <a name="train"></a> Train (TBD) 💻
 1. Prepare a dataset (AVC/API)
 
 2. Train: Please check **opt.py** to setup parameters you want (We use opt.py to control everything we want)\
@@ -91,7 +90,7 @@ sudo apt install ffmpeg
     ```
 
 ## Related Projects
-1. Fast Anime SR acceleration: https://github.com/Kiteretsu77/FAST_Anime_VSR \
+1. Fast Anime SR acceleration: https://github.com/Kiteretsu77/FAST_Anime_VSR 
 2. My previous paper (VCISR - WACV2024) as the baseline method: https://github.com/Kiteretsu77/VCISR-official 
 
 
