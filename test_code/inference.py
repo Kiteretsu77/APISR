@@ -59,7 +59,7 @@ if __name__ == "__main__":
     # Fundamental setting
     parser = argparse.ArgumentParser()
     parser.add_argument('--input_dir', type = str, default='__assets__/lr_inputs', help="Can be either single image input or a folder input")
-    parser.add_argument('--weight_path', type = str, default='saved_models/APISR_GAN_best_generator.pth', help="Weight path directory, usually uner saved_models folder")
+    parser.add_argument('--weight_path', type = str, default='pretrained/APISR_GAN_best_generator.pth', help="Weight path directory, usually uner saved_models folder")
     parser.add_argument('--store_dir', type = str, default='sample_outputs', help="The folder to store the super-resolved images")
     args  = parser.parse_args()
 

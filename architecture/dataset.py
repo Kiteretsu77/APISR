@@ -85,7 +85,7 @@ class ImageDataset(Dataset):
     def __getitem__(self, index):
         
         # Read File
-        img_lr = cv2.imread(self.files_lr[index % len(self.files_lr)]) # 转换成RGB是正确的做法
+        img_lr = cv2.imread(self.files_lr[index % len(self.files_lr)]) # Should be BGR
         img_degrade_hr = cv2.imread(self.files_degrade_hr[index % len(self.files_degrade_hr)]) 
         img_hr = cv2.imread(self.files_hr[index % len(self.files_hr)])
 
@@ -96,7 +96,7 @@ class ImageDataset(Dataset):
         # Transform to Tensor
         img_lr = self.transform(img_lr)
         img_degrade_hr = self.transform(img_degrade_hr)
-        img_hr = self.transform(img_hr)  # ToTensor() 就已经转换成[0-1]的数值了
+        img_hr = self.transform(img_hr)  # ToTensor() is already in the range [0, 1]
 
 
         return {"lr": img_lr, "degrade_hr": img_degrade_hr, "hr": img_hr}

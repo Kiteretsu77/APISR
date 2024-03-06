@@ -149,7 +149,7 @@ class RRDBNet(nn.Module):
         num_out_ch (int): Channel number of outputs.
         num_feat (int): Channel number of intermediate features.
             Default: 64
-        num_block (int): Block number in the trunk network. Defaults: 23
+        num_block (int): Block number in the trunk network. Defaults: 6 for our Anime training cases
         num_grow_ch (int): Channels for each growth. Default: 32.
     """
 
@@ -199,6 +199,7 @@ def main():
     from torchsummary import summary
     import time
     
+    # We use RRDB 6Blocks by default.
     model = RRDBNet(3, 3).cuda()
     pytorch_total_params = sum(p.numel() for p in model.parameters())
     print(f"RRDB has param {pytorch_total_params//1000} K params")
@@ -211,5 +212,7 @@ def main():
     print("output size is ", x.shape)
     total = time.time() - start
     print(total)
+
+
 if __name__ == "__main__":
     main()

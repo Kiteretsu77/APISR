@@ -89,26 +89,6 @@ class train_grl(train_master):
                 upsampler = "nearest+conv",     # Change
             ).cuda()
 
-
-        elif opt['model_size'] == "edit1":
-            print("We are trining with edit1 version")
-            self.generator = GRL(
-                upscale = opt['scale'],
-                img_size = 144,                 # Change
-                window_size = 8,        
-                depths = [4, 4, 4, 4],
-                embed_dim = 80,                 # Change
-                num_heads_window = [2, 2, 2, 2],
-                num_heads_stripe = [2, 2, 2, 2],
-                mlp_ratio = 2,
-                qkv_proj_type = "linear",
-                anchor_proj_type = "avgpool",
-                anchor_window_down_factor = 2,
-                out_proj_type = "linear",
-                conv_type = "1conv",
-                upsampler = "nearest+conv",     # Change
-            ).cuda()
-
         else:
             raise NotImplementedError("We don't support such model size in GRL model")
         
@@ -119,11 +99,10 @@ class train_grl(train_master):
     def run(self):
         self.master_run()
                         
-        # TODO: 这边还少了一个ema，论文说是为了better training and performance
 
     
     def calculate_loss(self, gen_hr, imgs_hr):
-        # 这里就是各种自定义化需要的loss function
+        # Define the loss function here
 
         # Generator pixel loss (l1 loss):  generated vs. GT
         l_g_pix = self.cri_pix(gen_hr, imgs_hr, self.batch_idx)

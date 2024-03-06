@@ -53,7 +53,7 @@ sudo apt install ffmpeg
 
 
 ## <a name="inference"></a> Inference ⚡⚡⚡
-1. Download the weight from https://drive.google.com/file/d/1Ubj-1f7gmi-dWlK_aUVcScZAlzKtuBJ8/view?usp=sharing and put it to "saved_models" folder
+1. Download the weight from https://drive.google.com/file/d/1Ubj-1f7gmi-dWlK_aUVcScZAlzKtuBJ8/view?usp=sharing and put it to "pretrained" folder
 2. Then, Execute 
     ```shell
     python test_code/inference.py --input_dir XXX  --weight_path XXX  --store_dir XXX

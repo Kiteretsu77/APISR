@@ -16,7 +16,7 @@ from train_code.train_master import train_master
 
 class train_grlgan(train_master):
     def __init__(self, options, args) -> None:
-        super().__init__(options, args, "grlgan", True) # 这里要传递一个universal的model name
+        super().__init__(options, args, "grlgan", True) 
 
 
     def loss_init(self):
@@ -87,26 +87,7 @@ class train_grlgan(train_master):
                 conv_type = "1conv",
                 upsampler = "nearest+conv",     # Change
             ).cuda()
-
-        elif opt['model_size'] == "edit1":
-            print("We are trining with edit1 version")
-            self.generator = GRL(
-                upscale = opt['scale'],
-                img_size = 144,                 # Change
-                window_size = 8,        
-                depths = [4, 4, 4, 4],
-                embed_dim = 80,                 # Change
-                num_heads_window = [2, 2, 2, 2],
-                num_heads_stripe = [2, 2, 2, 2],
-                mlp_ratio = 2,
-                qkv_proj_type = "linear",
-                anchor_proj_type = "avgpool",
-                anchor_window_down_factor = 2,
-                out_proj_type = "linear",
-                conv_type = "1conv",
-                upsampler = "nearest+conv",     # Change
-            ).cuda()
-
+            
         else:
             raise NotImplementedError("We don't support such model size in GRL model")
         # self.generator = torch.compile(self.generator).cuda()

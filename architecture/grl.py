@@ -606,7 +606,7 @@ if __name__ == "__main__":
     print(f"Number of parameters {num_params / 10 ** 6: 0.2f}")
 
     # Count the number of FLOPs to double check
-    x = torch.randn((1, 3, 180, 180)).cuda()
+    x = torch.randn((1, 3, 180, 180)).cuda()        # Don't use input size that is too big (we don't have @torch.no_grad here)
     x = model(x)
     print("output size is ", x.shape)
 

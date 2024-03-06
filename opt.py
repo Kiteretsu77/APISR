@@ -4,17 +4,10 @@ import os
 
 opt = {}
 ##################################################### Global Setting ###########################################################
-opt['description'] = "4x_GRL"              # Description to add to the log  
+opt['description'] = "4x_GRL_paper"              # Description to add to the log  
 
-opt['architecture'] = "GRL"                      # "GRL" || "GRLGAN"
+opt['architecture'] = "GRL"                # "GRL" || "GRLGAN"  
 
-opt['Danbooru_layer_weights'] = {
-                                    "0": 0.1, 
-                                    "4_2_conv3": 20, 
-                                    "5_3_conv3": 25, 
-                                    "6_5_conv3": 1, 
-                                    "7_2_conv3": 1
-                                }
 ################################################################################################################################
 
 # GPU setting
@@ -30,8 +23,8 @@ opt['train_dataloader_workers'] = 5      # Number of workers for DataLoader
 opt['checkpoints_freq'] = 50             # frequency to store checkpoints in the folder (unit: epoch)
 
 # Dataset Path
-opt["full_patch_source"] = "../datasets_anime/APISR_dataset"        # 这个才是真正的input
-opt["degrade_hr_dataset_name"] = "datasets/train_hr"                # 
+opt["full_patch_source"] = "../datasets_anime/APISR_dataset"        # The true input, we will use path to do generate lr in every epoch. Please read the README of the training 
+opt["degrade_hr_dataset_name"] = "datasets/train_hr"                # The GT path
 opt["train_hr_dataset_name"] = "datasets/train_hr_enhanced"         # The Pseudo-GT path (after hand-drawn line enhancement)
 opt["lr_dataset_name"] = "datasets/train_lr"                        # Where you temporally store the LR generated result
 opt['hr_size'] = 256
@@ -50,41 +43,42 @@ opt['MS-SSIM_alpha'] = 0.2                              # The alpha weight for M
 #################################################################################################################################
 
 
-if opt['architecture'] == "GRL":
+if opt['architecture'] == "GRL":        # L1 loss training version
     # Setting for GRL Training 
-    opt['model_size'] = "tiny2"               # "small" || "tiny" || "edit1" || "tiny2"
+    opt['model_size'] = "tiny2"               # "small" || "tiny" || "tiny2"
 
-    opt['train_iterations'] = 300000         # Training Iterations (550K 只是有时候训练太长的时候设置，一般700K是标准)
+    opt['train_iterations'] = 300000         # Training Iterations
     opt['train_batch_size'] = 32             # 4x: 32 (256x256); 2x:  4?  
     opt['use_pretrained'] = False            # If we want to use pretrained weight
     opt["start_learning_rate"] = 0.0002      # Training Epoch, use the as Real-ESRGAN: 0.0001 - 0.0002 is ok, based on your need
 
-    opt['decay_iteration'] = 100000            # Decay iteration  整个调整成跟GAN一样，这样子看看300K是不是就还行
-    opt['double_milestones'] = []         # Iteration based time you double your learning rate
+    opt['decay_iteration'] = 100000          # Decay iteration  
+    opt['double_milestones'] = []            # Iteration based time you double your learning rate (Just ignore this one)
 
 
-elif opt['architecture'] == "GRLGAN":
+elif opt['architecture'] == "GRLGAN":   # L1 + Preceptual + Discriminator Loss version
     # Setting for GRL Training
-    opt['model_size'] = "tiny2"               # "small" || "tiny" || "edit1" || "tiny2"
+    opt['model_size'] = "tiny2"               # "small" || "tiny" || "tiny2"  (Use tiny2 by default, No need to change)
 
     # Setting for GRL-GAN Traning
     opt['train_iterations'] = 300000         # Training Iterations
-    opt['train_batch_size'] = 32             # 4x: 32 (256x256); 2x:  4?        
+    opt['train_batch_size'] = 32             # 4x: 32 batch size (for 256x256); 2x: 4        
     opt['use_pretrained'] = True             # If we want to use pretrained weight (name: grlgan_pretrained.pth)     
     opt["start_learning_rate"] = 0.0001      # Training Epoch, use the as Real-ESRGAN: 0.0001 - 0.0002 is ok, based on your need
 
     # Perceptual loss
-    opt["danbooru_perceptual_loss_weight"] = 0.5    # 目前我的想法是0.5，1.0都行
-    opt["vgg_perceptual_loss_weight"] = 0.5
-    opt['train_perceptual_vgg_type'] = 'vgg19'
-    opt['train_perceptual_layer_weights'] = {'conv1_2': 0.1, 'conv2_2': 0.1, 'conv3_4': 1, 'conv4_4': 1, 'conv5_4': 1}
-
+    opt["danbooru_perceptual_loss_weight"] = 0.5        # ResNet50 Danbooru Perceptual loss weight scale
+    opt["vgg_perceptual_loss_weight"] = 0.5             # VGG PhotoRealistic Perceptual loss weight scale
+    opt['train_perceptual_vgg_type'] = 'vgg19'          # VGG16/19 (Just use 19 by default)
+    opt['train_perceptual_layer_weights'] = {'conv1_2': 0.1, 'conv2_2': 0.1, 'conv3_4': 1, 'conv4_4': 1, 'conv5_4': 1}      # Middle-Layer weight for VGG
+    opt['Danbooru_layer_weights'] = {"0": 0.1, "4_2_conv3": 20, "5_3_conv3": 25, "6_5_conv3": 1, "7_2_conv3": 1}            # Middle-Layer weight for ResNet
+    
     # GAN loss
     opt["discriminator_type"] = "PatchDiscriminator"        # "PatchDiscriminator" || "UNetDiscriminator" 
-    opt["gan_loss_weight"] = 0.1                            # 都往低一点调整 0.1左右
+    opt["gan_loss_weight"] = 0.1                            # 
 
-    opt['decay_iteration'] = 100000       # 目前求稳每10万decay一次，不会过于极端，也不会过于多，也有两次decay一共
-    opt['double_milestones'] = []         # 在用multiscale discriminator的时候改了一大版
+    opt['decay_iteration'] = 100000       # Fixed decay gap
+    opt['double_milestones'] = []         # Just put this empty
 
 else:
     raise NotImplementedError("Please check you architecture option setting!")
@@ -118,7 +112,7 @@ if opt['architecture'] in ["ESRNET", "ESRGAN", "GRL", "GRLGAN", "CUNET", "CUGAN"
 
     # The first degradation process
     opt['resize_prob'] = [0.2, 0.7, 0.1]       
-    opt['resize_range'] = [0.1, 1.2]               # 原本是：[0.15, 1.5] 这里我进行一点调整，让他们不要resize那么剧烈
+    opt['resize_range'] = [0.1, 1.2]               # Was [0.15, 1.5] in Real-ESRGAN
     opt['gaussian_noise_prob'] = 0.5            
     opt['noise_range'] =  [1, 30]               
     opt['poisson_scale_range'] = [0.05, 3]    
@@ -135,11 +129,11 @@ if opt['architecture'] in ["ESRNET", "ESRGAN", "GRL", "GRLGAN", "CUNET", "CUGAN"
     opt['gray_noise_prob2'] = 0.4           
     
     # Other common settings
-    opt['resize_options'] = ['area', 'bilinear', 'bicubic']     # 都要是F.interpolate支持的resize方案
+    opt['resize_options'] = ['area', 'bilinear', 'bicubic']     # Should be supported by F.interpolate
 
 
     # First image compression
-    opt['compression_codec1'] = ["jpeg", "webp", "heif", "avif"]     # Compression codec: webp/avif/heic/264/mpeg2  +  JPEG2000
+    opt['compression_codec1'] = ["jpeg", "webp", "heif", "avif"]     # Compression codec: heif is the intra frame version of HEVC (H.265) and avif is the intra frame version of AV1
     opt['compression_codec_prob1'] = [0.4, 0.6, 0.0, 0.0] 
 
     # Specific Setting
@@ -153,7 +147,7 @@ if opt['architecture'] in ["ESRNET", "ESRGAN", "GRL", "GRLGAN", "CUNET", "CUGAN"
 
     
     ######################################## Setting for Degradation with Intra-Prediction ########################################
-    opt['compression_codec2'] = ["jpeg", "webp", "avif", "mpeg2", "mpeg4", "h264", "h265"]     # Compression codec: webp/avif/heic/264/mpeg2  +  JPEG2000
+    opt['compression_codec2'] = ["jpeg", "webp", "avif", "mpeg2", "mpeg4", "h264", "h265"]     # Compression codec: similar to VCISR but more intense degradation
     opt['compression_codec_prob2'] = [0.06, 0.1, 0.1, 0.12, 0.12, 0.3, 0.2] 
 
     # Image compression setting
