@@ -38,7 +38,6 @@ opt['pixel_loss'] = "L1"                                # Usually it is "L1"
 opt["adam_beta1"] = 0.9
 opt["adam_beta2"] = 0.99
 opt['decay_gamma'] = 0.5                                # Decay the learning rate per decay_iteration
-opt['MS-SSIM_alpha'] = 0.2                              # The alpha weight for MS-SSIM and L1 loss will be 1-alpha weight
 
 #################################################################################################################################
 

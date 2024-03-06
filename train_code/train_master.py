@@ -100,8 +100,6 @@ class train_master(object):
             self.cri_pix = PixelLoss().cuda()
         elif self.options['pixel_loss'] == "L1_Charbonnier":
             self.cri_pix = L1_Charbonnier_loss().cuda()
-        elif self.options['pixel_loss'] == "L1_MS-SSIM_loss":
-            self.cri_pix = MS_SSIM_L1_LOSS(alpha=self.options['MS-SSIM_alpha']).cuda()     # 这个总感觉implement的scale
 
         print("We are using {} loss".format(self.options['pixel_loss']))
         
