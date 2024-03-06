@@ -4,9 +4,9 @@ import os
 
 opt = {}
 ##################################################### Global Setting ###########################################################
-opt['description'] = "4x_GRL_paper"              # Description to add to the log  
+opt['description'] = "4x_GRL_paper"             # Description to add to the log  
 
-opt['architecture'] = "GRL"                # "GRL" || "GRLGAN"  
+opt['architecture'] = "GRL"                     # "GRL" || "GRLGAN"  
 
 ################################################################################################################################
 
@@ -74,7 +74,7 @@ elif opt['architecture'] == "GRLGAN":   # L1 + Preceptual + Discriminator Loss v
     
     # GAN loss
     opt["discriminator_type"] = "PatchDiscriminator"        # "PatchDiscriminator" || "UNetDiscriminator" 
-    opt["gan_loss_weight"] = 0.1                            # 
+    opt["gan_loss_weight"] = 0.2                           # 
 
     opt['decay_iteration'] = 100000       # Fixed decay gap
     opt['double_milestones'] = []         # Just put this empty
