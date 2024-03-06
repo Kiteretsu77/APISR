@@ -30,8 +30,6 @@
 
 
 
-AVC_RealLQ_comparison.png
-
 ## <a name="installation"></a> Installation 🔧
 
 ```shell
