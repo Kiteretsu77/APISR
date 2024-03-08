@@ -21,6 +21,7 @@ APISR aims at restoring and enhancing low-quality low-resolution anime images an
 <!-- Kiteret: https://imgsli.com/MjQ1NzE0 -->
 <!-- EVA: https://imgsli.com/MjQ1NzIx -->
 <!-- Pokemon: https://imgsli.com/MjQ1NzIy -->
+<!-- Pokemon2: https://imgsli.com/MjQ1NzM5 -->
 <!-- Gundam0079: https://imgsli.com/MjQ1NzIz -->
 <!-- Gundam0079 #2: https://imgsli.com/MjQ1NzMw -->
 <!-- f91: https://imgsli.com/MjQ1NzMx -->
@@ -35,7 +36,7 @@ APISR aims at restoring and enhancing low-quality low-resolution anime images an
 
 [<img src="__assets__/visual_results/0079_visual.png" height="223px"/>](https://imgsli.com/MjQ1NzIz) [<img src="__assets__/visual_results/0079_2_visual.png" height="223px"/>](https://imgsli.com/MjQ1NzMw) 
 
-[<img src="__assets__/visual_results/pokemon_visual.png" height="223px"/>](https://imgsli.com/MjQ1NzIy)
+[<img src="__assets__/visual_results/pokemon_visual.png" height="223px"/>](https://imgsli.com/MjQ1NzIy) [<img src="__assets__/visual_results/pokemon2_visual.png" height="223px"/>](https://imgsli.com/MjQ1NzM5)
 
 [<img src="__assets__/visual_results/eva_visual.png" height="223px"/>](https://imgsli.com/MjQ1NzIx) [<img src="__assets__/visual_results/kiteret_visual.png" height="223px"/>](https://imgsli.com/MjQ1NzE0) 
 
