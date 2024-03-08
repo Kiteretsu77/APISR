@@ -26,4 +26,5 @@ tmp/*
 
 !__assets__/lr_inputs/*
 !__assets__/*
+!__assets__/visual_results/*
 !requirements.txt
