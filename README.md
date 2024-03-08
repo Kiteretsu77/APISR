@@ -1,14 +1,27 @@
+<p align="center">
+    <img src="__assets__/logo.png" height="100">
+</p>
+
 ## APISR: Anime Production Inspired Real-World Anime Super-Resolution (CVPR 2024)
- APISR aims at restoring and enhancing low-quality anime images and video sources with various degradations from real-world scenarios. \
+APISR aims at restoring and enhancing low-quality low-resolution anime images and video sources with various degradations from real-world scenarios. 
  
 [![Arxiv](https://img.shields.io/badge/Arxiv-<COLOR>.svg)](https://arxiv.org/abs/2403.01598)<br>
 
 👀[**Visualization**](#Visualization)  **|** 🔥 [Update](#Update) **|** 🔧 [Installation](#installation) **|** ⚡[Inference](#inference) **|** 🧩 [Dataset Curation](#dataset_curation) **|** 💻 [Train](#train)
 
 
+<p align="center">
+    <img src="__assets__/workflow.png" style="border-radius: 15px">
+</p>
+
 
 :star: If you like APISR, please help star this repo. Thanks! :hugs:
 
+
+<!-- Kiteret: https://imgsli.com/MjQ1NzE0 -->
+<!-- EVA: https://imgsli.com/MjQ1NzIx -->
+<!-- Pokemon: https://imgsli.com/MjQ1NzIy -->
+<!-- Gundam0079: https://imgsli.com/MjQ1NzIz -->
 
 
 <!---------------------------------------- Visualization ---------------------------------------->
