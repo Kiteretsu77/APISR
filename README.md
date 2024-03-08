@@ -22,14 +22,31 @@ APISR aims at restoring and enhancing low-quality low-resolution anime images an
 <!-- EVA: https://imgsli.com/MjQ1NzIx -->
 <!-- Pokemon: https://imgsli.com/MjQ1NzIy -->
 <!-- Gundam0079: https://imgsli.com/MjQ1NzIz -->
+<!-- Gundam0079 #2: https://imgsli.com/MjQ1NzMw -->
+<!-- f91: https://imgsli.com/MjQ1NzMx -->
+<!-- wataru: https://imgsli.com/MjQ1NzMy -->
+
+
 
 
 <!---------------------------------------- Visualization ---------------------------------------->
-## <a name="Visualization"></a> Visualization (Zoom in for the best view!) 👀
+## <a name="Visualization"></a> Visualization (Click them for the best view!) 👀
 
+
+[<img src="__assets__/visual_results/0079_visual.png" height="223px"/>](https://imgsli.com/MjQ1NzIz) [<img src="__assets__/visual_results/0079_2_visual.png" height="223px"/>](https://imgsli.com/MjQ1NzMw) 
+
+[<img src="__assets__/visual_results/eva_visual.png" height="223px"/>](https://imgsli.com/MjQ1NzIx) [<img src="__assets__/visual_results/kiteret_visual.png" height="223px"/>](https://imgsli.com/MjQ1NzE0) 
+
+
+[<img src="__assets__/visual_results/f91_visual.png" height="223px"/>](https://imgsli.com/MjQ1NzMx) [<img src="__assets__/visual_results/wataru_visual.png" height="223px"/>](https://imgsli.com/MjQ1NzMy)
+
+[<img src="__assets__/visual_results/pokemon_visual.png" height="223px"/>](https://imgsli.com/MjQ1NzIy)
+
+
+<!-- 
 <p align="center">
   <img src="__assets__/Anime_in_the_wild.png">
-</p>
+</p> -->
 
 <p align="center">
   <img src="__assets__/AVC_RealLQ_comparison.png">
@@ -71,7 +88,7 @@ sudo apt install ffmpeg
 
 ## <a name="inference"></a> Inference ⚡⚡⚡
 1. Download the weight from https://drive.google.com/file/d/1Ubj-1f7gmi-dWlK_aUVcScZAlzKtuBJ8/view?usp=sharing and put it to "pretrained" folder
-2. Then, Execute 
+2. Then, Execute (My personal device is RTX4090 and inference can work on 24GB memory for all sample inputs; I still need to check what the minimum GPU memory required is)
     ```shell
     python test_code/inference.py --input_dir XXX  --weight_path XXX  --store_dir XXX
     ```
