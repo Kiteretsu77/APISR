@@ -28,8 +28,8 @@ class MPEG4():
         temp_input_path = "tmp/input_"+str(idx)
         video_store_dir = "tmp/encoded_"+str(idx)+".mp4"
         temp_store_path = "tmp/output_"+str(idx)
-        os.mkdir(temp_input_path)
-        os.mkdir(temp_store_path)
+        os.makedirs(temp_input_path)
+        os.makedirs(temp_store_path)
         
         # Move frame 
         cv2.imwrite(os.path.join(temp_input_path, "1.png"), single_frame)

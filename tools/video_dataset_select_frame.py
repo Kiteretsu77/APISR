@@ -27,7 +27,7 @@ for idx, parent_dir in enumerate(dirs):
     store_dir = store_dirs[idx]
     if os.path.exists(store_dir):
         shutil.rmtree(store_dir)
-    os.mkdir(store_dir)
+    os.makedirs(store_dir)
 
     # Iterate to Sub Folder sequence
     for sub_folder in sorted(os.listdir(parent_dir)):

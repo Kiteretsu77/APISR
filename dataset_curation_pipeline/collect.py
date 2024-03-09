@@ -110,7 +110,7 @@ class frame_collector:
         # Prepare the work folder needed
         if os.path.exists(tmp_path):
             shutil.rmtree(tmp_path)
-        os.mkdir(tmp_path)
+        os.makedirs(tmp_path)
         
 
         # Split Video I-frame
@@ -203,7 +203,7 @@ if __name__ == "__main__":
     # Prepare
     if os.path.exists(save_dir):
         shutil.rmtree(save_dir)
-    os.mkdir(save_dir)
+    os.makedirs(save_dir)
 
 
     # Process

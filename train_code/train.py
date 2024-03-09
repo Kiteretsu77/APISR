@@ -15,7 +15,7 @@ from opt import opt
 
 def storage_manage():
     if not os.path.exists("runs_last/"):
-        os.mkdir("runs_last/")
+        os.makedirs("runs_last/")
     
     # copy to the new address
     new_address = "runs_last/"+str(int(time.time()))+"/"

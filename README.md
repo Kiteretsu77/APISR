@@ -18,6 +18,10 @@ APISR aims at restoring and enhancing low-quality low-resolution anime images an
 :star: If you like APISR, please help star this repo. Thanks! :hugs:
 
 
+
+<!---------------------------------------- Visualization ---------------------------------------->
+## <a name="Visualization"></a> Visualization (Click them for the best view!) 👀
+
 <!-- Kiteret: https://imgsli.com/MjQ1NzE0 -->
 <!-- EVA: https://imgsli.com/MjQ1NzIx -->
 <!-- Pokemon: https://imgsli.com/MjQ1NzIy -->
@@ -26,13 +30,6 @@ APISR aims at restoring and enhancing low-quality low-resolution anime images an
 <!-- Gundam0079 #2: https://imgsli.com/MjQ1NzMw -->
 <!-- f91: https://imgsli.com/MjQ1NzMx -->
 <!-- wataru: https://imgsli.com/MjQ1NzMy -->
-
-
-
-
-<!---------------------------------------- Visualization ---------------------------------------->
-## <a name="Visualization"></a> Visualization (Click them for the best view!) 👀
-
 
 [<img src="__assets__/visual_results/0079_visual.png" height="223px"/>](https://imgsli.com/MjQ1NzIz) [<img src="__assets__/visual_results/0079_2_visual.png" height="223px"/>](https://imgsli.com/MjQ1NzMw) 
 
@@ -43,11 +40,6 @@ APISR aims at restoring and enhancing low-quality low-resolution anime images an
 [<img src="__assets__/visual_results/f91_visual.png" height="223px"/>](https://imgsli.com/MjQ1NzMx) [<img src="__assets__/visual_results/wataru_visual.png" height="223px"/>](https://imgsli.com/MjQ1NzMy)
 
 
-
-<!-- 
-<p align="center">
-  <img src="__assets__/Anime_in_the_wild.png">
-</p> -->
 
 <p align="center">
   <img src="__assets__/AVC_RealLQ_comparison.png">
@@ -93,6 +85,8 @@ sudo apt install ffmpeg
 
 ## <a name="inference"></a> Inference ⚡⚡⚡
 1. Download the weight from https://drive.google.com/file/d/1Ubj-1f7gmi-dWlK_aUVcScZAlzKtuBJ8/view?usp=sharing and put it to "pretrained" folder
+
+
 2. Then, Execute (My personal device is RTX4090 and inference can work on 24GB memory for all sample inputs; I still need to check what the minimum GPU memory required is)
     ```shell
     python test_code/inference.py --input_dir XXX  --weight_path XXX  --store_dir XXX
@@ -108,19 +102,39 @@ sudo apt install ffmpeg
     python dataset_curation_pipeline/collect.py --video_folder_dir XXXX --save_dir XXX
     ```
 
-## <a name="train"></a> Train (TBD) 💻
-1. Prepare a dataset (AVC/API)
+2. Once you get an image dataset with various aspect ratio and resolution, you can run the following scripts
 
-2. Train: Please check **opt.py** carefully to setup parameters you want (We use opt.py to control everything we want)\
-    **Step1** (Net L1 loss training): Run 
+    Be careful to check **full_patch_source** && **degrade_hr_dataset_name** && **train_hr_dataset_name** (we will use there variables in opt.py setting of the training)
+
+    ```shell
+    bash scripts/prepare_datasets.sh
+    ```
+
+    In order to decrease memory utilization and increase training efficiency, we pre-process all time consuming pseudo-GT (**train_hr_dataset_name**) at the dataset preparation stage. 
+    
+    But in order to create a natural input for prediction-oriented compression, in every epoch, the degradation started from the uncropped GT (**full_patch_source**) and LR synthetic images are concurrently stored. Cropped HR GT dataset (**degrade_hr_dataset_name**) is fixed in the dataset preparation stage and won't be modified during training.
+    
+
+
+
+## <a name="train"></a> Train 💻
+
+**The whole training can be done in one RTX4090!**
+
+1. Prepare a dataset (AVC/API) which follow step 2 in [**Dataset Curation**](#dataset_curation)
+
+2. Train: Please check **opt.py** carefully to setup parameters you want (modifying **Frequently Changed Setting** is usually enough)
+
+    **Step1** (Net **L1** loss training): Run 
     ```shell
     python train_code/train.py 
     ```
     The model weights will be inside the folder 'saved_models' (same to checkpoints)
 
-    **Step2** (GAN Adversarial Training): 
-    1. Change opt['architecture'] in **opt.py** as "GRLGAN" and change other batch size information if you feel needed.
-    2. Run (Based on previous method, GAN should start from L1 loss pretrained network so setup the pretrained_path)
+    **Step2** (GAN **Adversarial** Training): 
+    1. Change opt['architecture'] in **opt.py** as "GRLGAN" and change other **batch size** information if you need.
+
+    2. Following previous works, GAN should start from L1 loss pretrained network, so please carry a **pretrained_path** (the default below should be fine)
     ```shell
     python train_code/train.py --pretrained_path saved_models/grl_best_generator.pth 
     ```

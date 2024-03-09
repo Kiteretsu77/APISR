@@ -104,7 +104,7 @@ if __name__ == "__main__":
     # dir = r"C:\Users\HikariDawn\Desktop\Real-CUGAN\datasets\sample"
     # output_dir = r"C:\Users\HikariDawn\Desktop\Real-CUGAN\datasets\sharp_regular"
     # if not os.path.exists(output_dir):
-    #     os.mkdir(output_dir)
+    #     os.makedirs(output_dir)
 
     # for file_name in sorted(os.listdir(dir)):
     #     print(file_name)

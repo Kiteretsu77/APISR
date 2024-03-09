@@ -3,12 +3,17 @@ import os
 
 
 opt = {}
-##################################################### Global Setting ###########################################################
+##################################################### Frequently Changed Setting ###########################################################
 opt['description'] = "4x_GRL_paper"             # Description to add to the log  
 
 opt['architecture'] = "GRL"                # "ESRNET" || "ESRGAN" || "GRL" || "GRLGAN" (GRL only support 4x)
 
+
+# Essential Setting
 opt['scale'] = 4                         # In default, this is 4x
+opt["full_patch_source"] = "../APISR_dataset"                       # The HR image without cropping 
+opt["degrade_hr_dataset_name"] = "datasets/train_hr"                # The cropped GT images
+opt["train_hr_dataset_name"] = "datasets/train_hr_enhanced"         # The cropped Pseudo-GT path (after hand-drawn line enhancement)
 ################################################################################################################################
 
 # GPU setting
@@ -18,12 +23,8 @@ os.environ['CUDA_VISIBLE_DEVICES'] = opt['CUDA_VISIBLE_DEVICES']
 
 ##################################################### Setting for General Training #############################################
 
-
-# Dataset Path
-opt["full_patch_source"] = "../APISR_dataset"        # The true input, we will use path to do generate lr in every epoch. Please read the README of the training 
-opt["degrade_hr_dataset_name"] = "datasets/train_hr"                # The GT path
-opt["train_hr_dataset_name"] = "datasets/train_hr_enhanced"         # The Pseudo-GT path (after hand-drawn line enhancement)
-opt["lr_dataset_name"] = "datasets/train_lr"                        # Where you temporally store the LR generated result
+# Dataset Setting
+opt["lr_dataset_name"] = "datasets/train_lr"                        # Where you temporally store the LR synthetic images
 opt['hr_size'] = 256
 
 

@@ -18,8 +18,8 @@ from degradation.ESR.usm_sharp import USMSharp
 
 class worker:
     def __init__(self, start_index=1):
-        # The index you want to start with (有时候如果是接已经存在的dataset，就可以把这个调整成想要的start idx)
-        self.output_index = start_index  # 因为历史遗留问题，都是先加1然后再存档，所以要从想开始的地方-1
+        # The index you want to start with 
+        self.output_index = start_index 
             
     def process(self, path, opt, usm_sharper):
         ''' crop the image here (also do usm here)
@@ -52,7 +52,7 @@ class worker:
             shift_offset_w = 0  #random.randint(0, width - crop_size * (width//crop_size))
         else:
             # Divide imgs by crop_size x crop_size and choose opt['crop_num_per_img'] num of them to avoid overlap
-            num = min(random_num, crop_num)  # 一开始每次选opt['crop_num_per_img']个
+            num = min(random_num, crop_num)  
             choices = random.sample(range(crop_num), num)
 
         for choice in choices:
@@ -67,7 +67,6 @@ class worker:
             sharpened_img = usm_sharper(img)
             
 
-        # TODO: random计算overlap区域，如果overlap就再计算最多两次，这样子保证了时间有效性
         for (h, w) in res_store:
             cropped_img = img[h+shift_offset_h : h+crop_size+shift_offset_h, w+shift_offset_w : w+crop_size+shift_offset_w, ...]
             cropped_img = np.ascontiguousarray(cropped_img)
@@ -123,7 +122,7 @@ def extract_subimages(opt):
                 img_list.append(osp.join(input_folder, file))
 
         # Iterate can crop
-        obj = worker(start_index=start_index)     # The start_index determines where you will start your naming yoour image (usually start from 0)
+        obj = worker(start_index=start_index)     # The start_index determines where you will start your naming your image (usually start from 0)
         for path in img_list:
             if random.random() < opt['select_rate']:
                 cropped_num = obj.process(path, opt, usm_sharper)
@@ -168,8 +167,8 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--save_folder', type=str, default='datasets/train_hr', help='Output folder')
     parser.add_argument('--output_usm', type=str, help='usm sharpened hr folder')
     parser.add_argument('--crop_size', type=int, default=360, help='Crop size')
-    parser.add_argument('--select_rate', type=float, default=1, help='(0-1): Proportaion to keep; 1 means to keep them all')
-    parser.add_argument('--crop_num_per_img', type=int, default=-1, help='Crop size (int); -1 means use all possible sub-frames')  # 设置成100以后就意味着全部都用上的说
+    parser.add_argument('--select_rate', type=float, default=1, help='(0-1): Proportion to keep; 1 means to keep them all')
+    parser.add_argument('--crop_num_per_img', type=int, default=-1, help='Crop size (int); -1 means use all possible sub-frames')  
     args = parser.parse_args()
 
     main(args)

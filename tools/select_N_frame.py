@@ -4,7 +4,7 @@ parnet_dir = "/media/hikaridawn/w/AVC_train_all"
 save_dir = "/media/hikaridawn/w/AVC_train_select5"
 if os.path.exists(save_dir):
     shutil.rmtree(save_dir)
-os.mkdir(save_dir)
+os.makedirs(save_dir)
 
 select_num = 5
 

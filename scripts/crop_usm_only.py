@@ -16,7 +16,7 @@ from collections import namedtuple
 # Import files from the local folder
 root_path = os.path.abspath('.')
 sys.path.append(root_path)
-from degradation.ESR.usm_sharp import USMSharp
+
 
 def crop_usm_subimages(input_dir, store_dir, crop_size: int):
     '''
@@ -72,7 +72,7 @@ if __name__ == '__main__':
     print(input_dir, store_dir, crop_size)
     if os.path.exists(store_dir):
         shutil.rmtree(store_dir)
-    os.mkdir(store_dir)
+    os.makedirs(store_dir)
 
 
     crop_usm_subimages(input_dir, store_dir, crop_size)

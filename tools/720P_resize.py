@@ -17,7 +17,7 @@ if __name__ == "__main__":
     # File Check
     if os.path.exists(store_dir):
         shutil.rmtree(store_dir)
-    os.mkdir(store_dir)
+    os.makedirs(store_dir)
 
     scale = 4
     num = 0

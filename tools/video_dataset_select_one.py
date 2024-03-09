@@ -4,7 +4,7 @@ dir = "../datasets/VideoLQ"
 store_dir = "../datasets/VideoLQ_select_one"
 if os.path.exists(store_dir):
     shutil.rmtree(store_dir)
-os.mkdir(store_dir)
+os.makedirs(store_dir)
 
 
 search_idx = 0

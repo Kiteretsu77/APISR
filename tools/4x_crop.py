@@ -19,7 +19,7 @@ if __name__ == "__main__":
     # Check file
     if os.path.exists(store_dir):
         shutil.rmtree(store_dir)
-    os.mkdir(store_dir)
+    os.makedirs(store_dir)
 
     # Process
     for file_name in sorted(os.listdir(input_dir)):

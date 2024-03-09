@@ -322,7 +322,8 @@ def passive_dilate(img):
 
 def gen_xdog_image(gray, outlier_threshold):
     '''
-        返回0/1的map (1代表white)
+    Returns:
+        dogged (numpy):     binary map in range (1 stands for white pixel)
     '''
     
     dogged = XDoG(gray, **XDoG_config)
@@ -370,7 +371,7 @@ if __name__ == "__main__":
 
     if os.path.exists(store_dir):
         shutil.rmtree(store_dir)
-    os.mkdir(store_dir)
+    os.makedirs(store_dir)
 
 
     dir_list = []

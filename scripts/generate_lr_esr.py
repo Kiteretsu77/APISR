@@ -61,7 +61,6 @@ def crop_process(path, crop_size, lr_dataset_name, output_index):
 
         
 
-    # TODO: random计算overlap区域，如果overlap就再计算最多两次，这样子保证了时间有效性
     for (h, w) in res_store:
         cropped_img = img[h+shift_offset_h : h+crop_size+shift_offset_h, w+shift_offset_w : w+crop_size+shift_offset_w, ...]
         cropped_img = np.ascontiguousarray(cropped_img)
@@ -90,7 +89,7 @@ def single_process(queue, opt, process_id):
             break
         input_path, store_path = items
 
-        # Reset kernels in every degradation batch for ESR (现在每个大的原图用一个独立的kernel，时间浪费程度还好吧)
+        # Reset kernels in every degradation batch for ESR
         obj_img.reset_kernels(opt)
         
         # Read all images and transform them to tensor
@@ -126,7 +125,7 @@ def generate_low_res_esr(org_opt, verbose=False):
 
     # Scan all images
     input_img_lists, output_img_lists = [], []
-    for file in sorted(os.listdir(input_folder)):       # 这里一定要ensure全部数据sorted顺序是对的！！！ 
+    for file in sorted(os.listdir(input_folder)):       
         input_img_lists.append(osp.join(input_folder, file))
         output_img_lists.append(osp.join("tmp", file))
     assert(len(input_img_lists) == len(output_img_lists))

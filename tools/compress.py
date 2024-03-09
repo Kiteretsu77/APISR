@@ -11,7 +11,7 @@ def compress(input_folder, codec, crf, preset):
         os.remove(video_store_name)
     if os.path.exists(store_dir):
         shutil.rmtree(store_dir)
-    os.mkdir(store_dir)
+    os.makedirs(store_dir)
 
 
     # Encode 
