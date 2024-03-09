@@ -67,15 +67,15 @@ cd APISR
 conda create -n APISR python=3.10
 conda activate APISR
 
-# Install Pytorch we use torch.compile in our repository by default
+# Install Pytorch and other packages needed
 pip install torch==2.1.1 torchvision==0.16.1 torchaudio==2.1.1 --index-url https://download.pytorch.org/whl/cu118
 pip install -r requirements.txt
 
-# To be absolutely sure that the tensorboard can execute. I recommend the following CMD from https://github.com/pytorch/pytorch/issues/22676#issuecomment-534882021
+# To be absolutely sure that tensorboard can execute. I recommend the following CMD from https://github.com/pytorch/pytorch/issues/22676#issuecomment-534882021
 pip uninstall tb-nightly tensorboard tensorflow-estimator tensorflow-gpu tf-estimator-nightly
 pip install tensorflow
 
-# Install FFMPEG (the following is for linux system, the rest can see https://ffmpeg.org/download.html)
+# Install FFMPEG [Only needed for training; inference will not involve ffmpeg] (the following is for linux system, Windows user can download ffmpeg from https://ffmpeg.org/download.html)
 sudo apt install ffmpeg
 ```
 
@@ -87,7 +87,7 @@ sudo apt install ffmpeg
 1. Download the weight of the paper from https://github.com/Kiteretsu77/APISR/releases/download/v0.1.0/4x_APISR_GRL_GAN_generator.pth (github release) or https://drive.google.com/file/d/1Ubj-1f7gmi-dWlK_aUVcScZAlzKtuBJ8/view?usp=sharing (Google Drive) and put the weight to "pretrained" folder. More weights can be found in [**Model Zoo**](docs/model_zoo.md).
 
 
-2. Then, Execute (My personal device is RTX4090 and inference can work on 24GB memory for all sample inputs; I still need to check what the minimum GPU memory required is)
+2. Then, Execute
     ```shell
     python test_code/inference.py --input_dir XXX  --weight_path XXX  --store_dir XXX
     ```
@@ -119,7 +119,7 @@ sudo apt install ffmpeg
 
 ## <a name="train"></a> Train 💻
 
-**The whole training can be done in one RTX4090!**
+**The whole training process can be done in one RTX3090/4090!**
 
 1. Prepare a dataset (AVC/API) which follow step 2 in [**Dataset Curation**](#dataset_curation)
 
