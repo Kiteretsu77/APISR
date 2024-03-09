@@ -7,7 +7,7 @@ APISR aims at restoring and enhancing low-quality low-resolution anime images an
  
 [![Arxiv](https://img.shields.io/badge/Arxiv-<COLOR>.svg)](https://arxiv.org/abs/2403.01598)<br>
 
-👀[**Visualization**](#Visualization)  **|** 🔥 [Update](#Update) **|** 🔧 [Installation](#installation) **|** ⚡[Inference](#inference) **|** 🧩 [Dataset Curation](#dataset_curation) **|** 💻 [Train](#train)
+👀[**Visualization**](#Visualization)  **|** 🔥 [Update](#Update) **|** 🔧 [Installation](#installation) **|** 🏰[**Model Zoo**](docs/model_zoo.md) **|** ⚡[Inference](#inference) **|** 🧩 [Dataset Curation](#dataset_curation) **|** 💻 [Train](#train)
 
 
 <p align="center">
@@ -84,7 +84,7 @@ sudo apt install ffmpeg
 
 
 ## <a name="inference"></a> Inference ⚡⚡⚡
-1. Download the weight from https://drive.google.com/file/d/1Ubj-1f7gmi-dWlK_aUVcScZAlzKtuBJ8/view?usp=sharing and put it to "pretrained" folder
+1. Download the weight of the paper from https://github.com/Kiteretsu77/APISR/releases/download/v0.1.0/4x_APISR_GRL_GAN_generator.pth (github release) or https://drive.google.com/file/d/1Ubj-1f7gmi-dWlK_aUVcScZAlzKtuBJ8/view?usp=sharing (Google Drive) and put the weight to "pretrained" folder. More weights can be found in [**Model Zoo**](docs/model_zoo.md).
 
 
 2. Then, Execute (My personal device is RTX4090 and inference can work on 24GB memory for all sample inputs; I still need to check what the minimum GPU memory required is)
