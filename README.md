@@ -79,6 +79,10 @@ conda activate APISR
 pip install torch==2.1.1 torchvision==0.16.1 torchaudio==2.1.1 --index-url https://download.pytorch.org/whl/cu118
 pip install -r requirements.txt
 
+# To be absolutely sure that the tensorboard can execute. I recommend the following CMD from https://github.com/pytorch/pytorch/issues/22676#issuecomment-534882021
+pip uninstall tb-nightly tensorboard tensorflow-estimator tensorflow-gpu tf-estimator-nightly
+pip install tensorflow
+
 # Install FFMPEG (the following is for linux system, the rest can see https://ffmpeg.org/download.html)
 sudo apt install ffmpeg
 ```
@@ -107,19 +111,18 @@ sudo apt install ffmpeg
 ## <a name="train"></a> Train (TBD) 💻
 1. Prepare a dataset (AVC/API)
 
-2. Train: Please check **opt.py** to setup parameters you want (We use opt.py to control everything we want)\
+2. Train: Please check **opt.py** carefully to setup parameters you want (We use opt.py to control everything we want)\
     **Step1** (Net L1 loss training): Run 
     ```shell
     python train_code/train.py 
     ```
-    The model weights will be inside the folder 'saved_models'
+    The model weights will be inside the folder 'saved_models' (same to checkpoints)
 
     **Step2** (GAN Adversarial Training): 
-    1. Change opt['architecture'] in **opt.py** as "GRLGAN".
-    2. Rename weights in 'saved_models' (either closest or the best, we use closest weight) to **grlgan_pretrained.pth**
-    3. Run 
+    1. Change opt['architecture'] in **opt.py** as "GRLGAN" and change other batch size information if you feel needed.
+    2. Run (Based on previous method, GAN should start from L1 loss pretrained network so setup the pretrained_path)
     ```shell
-    python train_code/train.py --use_pretrained
+    python train_code/train.py --pretrained_path saved_models/grl_best_generator.pth 
     ```
 
 ## Related Projects

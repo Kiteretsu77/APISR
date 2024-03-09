@@ -25,7 +25,7 @@ except RuntimeError:
 root_path = os.path.abspath('.')
 sys.path.append(root_path)
 from loss.gan_loss import GANLoss, MultiScaleGANLoss
-from loss.pixel_loss import PixelLoss, L1_Charbonnier_loss, MS_SSIM_L1_LOSS
+from loss.pixel_loss import PixelLoss, L1_Charbonnier_loss
 from loss.perceptual_loss import PerceptualLoss
 from loss.anime_perceptual_loss import Anime_PerceptualLoss
 from architecture.dataset import ImageDataset
@@ -43,7 +43,7 @@ class train_master(object):
         self.options = options
         self.has_discriminator = has_discriminator
 
-        # Loss init (只是基础款需要pixel loss，其他的都自定义)
+        # Loss init
         self.loss_init()
 
         # Generator
@@ -66,14 +66,14 @@ class train_master(object):
         # Options setting
         self.n_iterations = options['train_iterations']
         self.batch_size = options['train_batch_size']  
-        self.n_cpu = options['train_dataloader_workers']   # 这个应该是有多少核, 主要用在dataloader上
+        self.n_cpu = options['train_dataloader_workers']   
 
 
     def adjust_learning_rate(self, iteration_idx):
         self.learning_rate = self.options['start_learning_rate']
-        end_iteration = self.options['train_iterations'] # - 2*self.options['decay_iteration']  # 现在放弃最后两次不decay这个选项
+        end_iteration = self.options['train_iterations']
 
-        # Caclulate a learning rate we need in real-time based on the iteration_idx
+        # Calculate a learning rate we need in real-time based on the iteration_idx
         for idx in range(min(end_iteration, iteration_idx)//self.options['decay_iteration']):
             idx = idx+1
             if idx * self.options['decay_iteration'] in self.options['double_milestones']:
@@ -83,7 +83,7 @@ class train_master(object):
                 # else, try to multiply decay_gamma (when we decay, we won't upscale)
                 self.learning_rate = self.learning_rate * self.options['decay_gamma']     # should be divisible in all cases
 
-        # Change the learning rate to our target (我担心这个computation会有点久)
+        # Change the learning rate to our target
         for param_group in self.optimizer_g.param_groups:
             param_group['lr'] = self.learning_rate
         
@@ -142,8 +142,7 @@ class train_master(object):
         # Check if we need to load weight
         if self.args.auto_resume_best or self.args.auto_resume_closest:
             self.load_weight(self.model_name)
-        elif self.options['use_pretrained']:
-            # 自己手动把cugan_pretrained变成cunet_pretrained吧
+        elif self.args.pretrained_path != "":   # If we give a pretrained path, we will use it (Should have in GAN training which uses pretrained L1 loss Network)
             self.load_pretrained(self.model_name)
 
         # Start iterating the epochs 
@@ -201,7 +200,7 @@ class train_master(object):
             self.tensorboard_epoch_draw( loss_per_epoch/batch_idx, epoch)
             
 
-            # Per epoch store weight (没必要每个iteration save weight，那样子太浪费时间了)
+            # Per epoch store weight
             self.save_weight(iteration_idx, self.model_name+"_closest", self.options)
             # Backup Checkpoint (Per 50 epoch)
             if epoch % self.options['checkpoints_freq'] == 0 or epoch == n_epochs-1:
@@ -240,7 +239,6 @@ class train_master(object):
     
         if self.has_discriminator:
             ##################################### Discriminator section  #####################################################
-            # optimize net_d 我觉得其实偏废话部分，应该来说这里都是requires_grad的，可能为了double-check吧
             for p in self.discriminator.parameters():
                 p.requires_grad = True
 
@@ -249,7 +247,7 @@ class train_master(object):
             # discriminator real input
             with torch.cuda.amp.autocast():
                 # We only need imgs_degrade_hr instead of imgs_hr in discriminator (Thus, we don't want to introduce usm in the discriminator)
-                real_d_preds = self.discriminator(imgs_degrade_hr) # true的不用detach，因为本来就没Nerual Network
+                real_d_preds = self.discriminator(imgs_degrade_hr) 
                 l_d_real = self.cri_gan(real_d_preds, True, is_disc=True)
             scaler.scale(l_d_real).backward()
 
@@ -269,9 +267,9 @@ class train_master(object):
     def load_pretrained(self, name):
         # This part will load generator weight here, and it doesn't need to 
 
-        weight_dir = "saved_models/"+name+"_pretrained.pth"
+        weight_dir = self.args.pretrained_path
         if not os.path.exists(weight_dir):
-            print("No such "+weight_dir+" file exists")
+            print("No such pretrained "+weight_dir+" file exists! We end the program! Please check the dir!")
             os._exit(0)
         
         checkpoint_g = torch.load(weight_dir)
@@ -311,9 +309,8 @@ class train_master(object):
                 checkpoint_g = torch.load("saved_models/" + head_prefix + "_best_generator.pth") # load generator weight
             else:
                 print("There is no best weight exists!")
-            if not self.args.clean_best:
-                self.lowest_generator_loss = min(self.lowest_generator_loss, checkpoint_g["lowest_generator_weight"] )
-                print("The lowest generator loss at the beginning is ", self.lowest_generator_loss)
+            self.lowest_generator_loss = min(self.lowest_generator_loss, checkpoint_g["lowest_generator_weight"] )
+            print("The lowest generator loss at the beginning is ", self.lowest_generator_loss)
         else:
             print(f"No saved_models/"+head+"_generator.pth " or " saved_models/"+head+"_discriminator.pth exists")
 
@@ -323,7 +320,6 @@ class train_master(object):
 
 
     def save_weight(self, iteration, name, opt):
-        # 这里后面改一下，可以save任意的输入，暂时把pixel_loss那些command掉了，save的也不是准确的草
 
         # Generator
         torch.save({
@@ -350,10 +346,11 @@ class train_master(object):
     def lowest_tensorboard_report(self, iteration):
         self.writer.add_scalar('Loss/lowest-weight', self.generator_loss, iteration)      
 
+
     @torch.no_grad()
     def generate_lr(self):
 
-        # If we directly use API, pytorch2.0 may raise an unkown bugs which is extremely slow on degradation pipeline
+        # If we directly use API, pytorch2.0 may raise an unknown bugs which is extremely slow on degradation pipeline
         os.system("python scripts/generate_lr_esr.py")
 
 

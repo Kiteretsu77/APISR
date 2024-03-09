@@ -19,7 +19,7 @@ scaler = torch.cuda.amp.GradScaler()
 
 class train_grl(train_master):
     def __init__(self, options, args) -> None:
-        super().__init__(options, args, "grl") # 这里要传递一个universal的model name
+        super().__init__(options, args, "grl")      # Pass a model name unique code 
 
 
     def loss_init(self):

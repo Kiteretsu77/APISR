@@ -26,10 +26,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--auto_resume_closest', action='store_true')
     parser.add_argument('--auto_resume_best', action='store_true')
-    parser.add_argument('--use_pretrained', action='store_true')
-    # parser.add_argument('--resume_net', action='store_true', help="GAN use pre-trained esr-net as initial weight")
-    parser.add_argument('--clean_best', action='store_true')
-    parser.add_argument('--platform', type=str, default="PC")
+    parser.add_argument('--pretrained_path', type = str, default="")
 
     global args
     args = parser.parse_args()

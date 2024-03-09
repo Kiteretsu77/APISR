@@ -16,7 +16,7 @@ from train_code.train_master import train_master
 
 class train_grlgan(train_master):
     def __init__(self, options, args) -> None:
-        super().__init__(options, args, "grlgan", True) 
+        super().__init__(options, args, "grlgan", True)     # Pass a model name unique code
 
 
     def loss_init(self):
@@ -100,15 +100,15 @@ class train_grlgan(train_master):
         
         self.generator.train(); self.discriminator.train()
 
+
     def run(self):
         self.master_run()
                         
-        # TODO: 这边还少了一个ema，论文说是为了better training and performance
 
 
     def calculate_loss(self, gen_hr, imgs_hr):
 
-        ###########  Real CUGAN has 3 losses on Generator  ###########
+        ######################  We have 3 losses on Generator  ######################
         # Generator Pixel loss (l1 loss):  generated vs. GT
         l_g_pix = self.cri_pix(gen_hr, imgs_hr)
         self.generator_loss += l_g_pix
@@ -125,10 +125,9 @@ class train_grlgan(train_master):
 
         # Generator GAN loss               label correction
         fake_g_preds = self.discriminator(gen_hr)
-        # Here, fake对应的是True, 下面的倒是fake对应False, 我的理解是Generate的图片要是true才行
-        l_g_gan = self.cri_gan(fake_g_preds, True, is_disc=False) # loss_weight (self.gan_loss_weight) 自动在里面包含了 
+        l_g_gan = self.cri_gan(fake_g_preds, True, is_disc=False) # loss_weight (self.gan_loss_weight) is included
         self.generator_loss += l_g_gan
-        self.weight_store["gan_loss"] = l_g_gan # 已经是带上gan_loss_weight(0.1/1)的了
+        self.weight_store["gan_loss"] = l_g_gan # Already with gan_loss_weight (0.2/1)
 
 
     def tensorboard_report(self, iteration):

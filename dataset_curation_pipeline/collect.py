@@ -20,7 +20,6 @@ class video_scoring:
 
         # Init the model
         self.scorer = ICNet()
-        # TODO: 这边的pretrained就直接load，后面再设置param控制
         self.scorer.load_state_dict(torch.load('pretrained/ck.pth',map_location=torch.device('cpu')))
         self.scorer.eval().cuda()
 

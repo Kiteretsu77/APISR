@@ -6,24 +6,21 @@ opt = {}
 ##################################################### Global Setting ###########################################################
 opt['description'] = "4x_GRL_paper"             # Description to add to the log  
 
-opt['architecture'] = "GRL"                     # "GRL" || "GRLGAN"  
+opt['architecture'] = "GRL"                # "ESRNET" || "ESRGAN" || "GRL" || "GRLGAN" (GRL only support 4x)
 
+opt['scale'] = 4                         # In default, this is 4x
 ################################################################################################################################
 
 # GPU setting
-opt['CUDA_VISIBLE_DEVICES'] = '0'           #   '0/1'
+opt['CUDA_VISIBLE_DEVICES'] = '0'           #   '0' / '1' based on different GPU you have.
 os.environ['CUDA_VISIBLE_DEVICES'] = opt['CUDA_VISIBLE_DEVICES']  
 
 
 ##################################################### Setting for General Training #############################################
-# Essential setting
-opt['scale'] = 4                         # In default, this is 4x
-opt['degradate_generation_freq'] = 1     # How frequent we degradate HR to LR (1: means Real-Time Degrade) [No need to change this]
-opt['train_dataloader_workers'] = 5      # Number of workers for DataLoader
-opt['checkpoints_freq'] = 50             # frequency to store checkpoints in the folder (unit: epoch)
+
 
 # Dataset Path
-opt["full_patch_source"] = "../datasets_anime/APISR_dataset"        # The true input, we will use path to do generate lr in every epoch. Please read the README of the training 
+opt["full_patch_source"] = "../APISR_dataset"        # The true input, we will use path to do generate lr in every epoch. Please read the README of the training 
 opt["degrade_hr_dataset_name"] = "datasets/train_hr"                # The GT path
 opt["train_hr_dataset_name"] = "datasets/train_hr_enhanced"         # The Pseudo-GT path (after hand-drawn line enhancement)
 opt["lr_dataset_name"] = "datasets/train_lr"                        # Where you temporally store the LR generated result
@@ -39,18 +36,91 @@ opt["adam_beta1"] = 0.9
 opt["adam_beta2"] = 0.99
 opt['decay_gamma'] = 0.5                                # Decay the learning rate per decay_iteration
 
+
+# Miscellaneous Setting
+opt['degradate_generation_freq'] = 1     # How frequent we degradate HR to LR (1: means Real-Time Degrade) [No need to change this]
+opt['train_dataloader_workers'] = 5      # Number of workers for DataLoader
+opt['checkpoints_freq'] = 50             # frequency to store checkpoints in the folder (unit: epoch)
+
+
 #################################################################################################################################
 
 
-if opt['architecture'] == "GRL":        # L1 loss training version
+# Add setting for different architecture (Please go through the model architecture you want!)
+if opt['architecture'] == "ESRNET":
+    
+    # Setting for ESRNET Training 
+    opt['ESR_blocks_num'] = 6                # How many RRDB blocks you need
+    opt['train_iterations'] = 500000         # Training Iterations (500K for large resolution large dataset overlap training)
+    opt['train_batch_size'] = 32             # 
+
+    # Learning Rate
+    opt["start_learning_rate"] = 0.0002      # Training Epoch, use the as Real-ESRGAN: 0.0001 - 0.0002 is ok, based on your need
+    opt['decay_iteration'] = 100000           # Decay iteration  
+    opt['double_milestones'] = []         # Iteration based time you double your learning rate
+
+
+elif opt['architecture'] == "ESRGAN":
+    
+    # Setting for ESRGAN Training 
+    opt['ESR_blocks_num'] = 6                # How many RRDB blocks you need
+    opt['train_iterations'] = 200000         # Training Iterations
+    opt['train_batch_size'] = 32             #      
+    
+    # Learning Rate
+    opt["start_learning_rate"] = 0.0001      # Training Epoch, use the as Real-ESRGAN: 0.0001 - 0.0002 is ok, based on your need
+    opt['decay_iteration'] = 100000       # Fixed decay gap
+    opt['double_milestones'] = []         # Just put this empty
+    
+    # Perceptual loss
+    opt["danbooru_perceptual_loss_weight"] = 0.5        # ResNet50 Danbooru Perceptual loss weight scale
+    opt["vgg_perceptual_loss_weight"] = 0.5             # VGG PhotoRealistic Perceptual loss weight scale
+    opt['train_perceptual_vgg_type'] = 'vgg19'          # VGG16/19 (Just use 19 by default)
+    opt['train_perceptual_layer_weights'] = {'conv1_2': 0.1, 'conv2_2': 0.1, 'conv3_4': 1, 'conv4_4': 1, 'conv5_4': 1}      # Middle-Layer weight for VGG
+    opt['Danbooru_layer_weights'] = {"0": 0.1, "4_2_conv3": 20, "5_3_conv3": 25, "6_5_conv3": 1, "7_2_conv3": 1}            # Middle-Layer weight for ResNet
+    
+    # GAN loss
+    opt["discriminator_type"] = "PatchDiscriminator"        # "PatchDiscriminator" || "UNetDiscriminator" 
+    opt["gan_loss_weight"] = 0.2                            # 
+
+
+
+elif opt['architecture'] == "CUNET":
+    # Setting for CUNET Training 
+    opt['train_iterations'] = 500000         # Training Iterations (700K for large resolution large dataset overlap training)
+    opt['train_batch_size'] = 16          
+
+    opt["start_learning_rate"] = 0.0002      # Training Epoch, use the as Real-ESRGAN: 0.0001 - 0.0002 is ok, based on your need
+    opt['decay_iteration'] = 100000           # Decay iteration  
+    opt['double_milestones'] = []         # Iteration based time you double your learning rate
+
+
+elif opt['architecture'] == "CUGAN":
+    # Setting for ESRGAN Training 
+    opt['ESR_blocks_num'] = 6                # How many RRDB blocks you need
+    opt['train_iterations'] = 200000         # Training Iterations
+    opt['train_batch_size'] = 16        
+    opt["start_learning_rate"] = 0.0001      # Training Epoch, use the as Real-ESRGAN: 0.0001 - 0.0002 is ok, based on your need
+
+    opt["perceptual_loss_weight"] = 1.0
+    opt['train_perceptual_vgg_type'] = 'vgg19'
+    opt['train_perceptual_layer_weights'] = {'conv1_2': 0.1, 'conv2_2': 0.1, 'conv3_4': 1, 'conv4_4': 1, 'conv5_4': 1}
+    opt['Danbooru_layer_weights'] = {"0": 0.1, "4_2_conv3": 20, "5_3_conv3": 25, "6_5_conv3": 1, "7_2_conv3": 1}            # Middle-Layer weight for ResNet
+    opt["gan_loss_weight"] = 0.2   # This one is very important, Don't neglect it. Based on the paper, it should be 0.1 scale
+
+    opt['decay_iteration'] = 100000                              # Decay iteration  
+    opt['double_milestones'] = []         # Iteration based time you double your learning rate
+
+
+elif opt['architecture'] == "GRL":        # L1 loss training version
     # Setting for GRL Training 
     opt['model_size'] = "tiny2"               # "small" || "tiny" || "tiny2"
-
+    
     opt['train_iterations'] = 300000         # Training Iterations
     opt['train_batch_size'] = 32             # 4x: 32 (256x256); 2x:  4?  
-    opt['use_pretrained'] = False            # If we want to use pretrained weight
+    
+    # Learning Rate
     opt["start_learning_rate"] = 0.0002      # Training Epoch, use the as Real-ESRGAN: 0.0001 - 0.0002 is ok, based on your need
-
     opt['decay_iteration'] = 100000          # Decay iteration  
     opt['double_milestones'] = []            # Iteration based time you double your learning rate (Just ignore this one)
 
@@ -62,9 +132,12 @@ elif opt['architecture'] == "GRLGAN":   # L1 + Preceptual + Discriminator Loss v
     # Setting for GRL-GAN Traning
     opt['train_iterations'] = 300000         # Training Iterations
     opt['train_batch_size'] = 32             # 4x: 32 batch size (for 256x256); 2x: 4        
-    opt['use_pretrained'] = True             # If we want to use pretrained weight (name: grlgan_pretrained.pth)     
+    
+    # Learning Rate
     opt["start_learning_rate"] = 0.0001      # Training Epoch, use the as Real-ESRGAN: 0.0001 - 0.0002 is ok, based on your need
-
+    opt['decay_iteration'] = 100000       # Fixed decay gap
+    opt['double_milestones'] = []         # Just put this empty
+    
     # Perceptual loss
     opt["danbooru_perceptual_loss_weight"] = 0.5        # ResNet50 Danbooru Perceptual loss weight scale
     opt["vgg_perceptual_loss_weight"] = 0.5             # VGG PhotoRealistic Perceptual loss weight scale
@@ -74,13 +147,12 @@ elif opt['architecture'] == "GRLGAN":   # L1 + Preceptual + Discriminator Loss v
     
     # GAN loss
     opt["discriminator_type"] = "PatchDiscriminator"        # "PatchDiscriminator" || "UNetDiscriminator" 
-    opt["gan_loss_weight"] = 0.2                           # 
-
-    opt['decay_iteration'] = 100000       # Fixed decay gap
-    opt['double_milestones'] = []         # Just put this empty
-
+    opt["gan_loss_weight"] = 0.2                            # 
+    
 else:
     raise NotImplementedError("Please check you architecture option setting!")
+
+
 
 
 # Basic setting for degradation
@@ -90,7 +162,7 @@ opt["augment_prob"] = 0.5                           # Probability of augmenting 
 
 if opt['architecture'] in ["ESRNET", "ESRGAN", "GRL", "GRLGAN", "CUNET", "CUGAN"]:        # 这里包含mixed BSR（所以mixed的时候要用ESRNET才不会出bug）
     # Parallel Process
-    opt['parallel_num'] = 6  # Multi-Processing num; Recommend 6
+    opt['parallel_num'] = 8  # Multi-Processing num; Recommend 6
 
     # Blur kernel1
     opt['kernel_range'] = [3, 11]      

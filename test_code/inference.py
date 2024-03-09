@@ -13,7 +13,7 @@ os.environ["PYTHONWARNINGS"] = "default"
 # Import files from the local folder
 root_path = os.path.abspath('.')
 sys.path.append(root_path)
-from test_code.test_utils import load_grl
+from test_code.test_utils import load_grl, load_rrdb, load_cunet
 
 
 @torch.no_grad      # You must add these time, else it will have Out of Memory
@@ -59,14 +59,22 @@ if __name__ == "__main__":
     # Fundamental setting
     parser = argparse.ArgumentParser()
     parser.add_argument('--input_dir', type = str, default='__assets__/lr_inputs', help="Can be either single image input or a folder input")
+    parser.add_argument('--model', type = str, default='GRL', help=" 'GRL' || 'RRDB' (for ESRNet & ESRGAN) || 'CUNET' (for Real-ESRGAN) ")
+    parser.add_argument('--scale', type = int, default=4, help="Up scaler factor")
     parser.add_argument('--weight_path', type = str, default='pretrained/APISR_GAN_best_generator.pth', help="Weight path directory, usually uner saved_models folder")
     parser.add_argument('--store_dir', type = str, default='sample_outputs', help="The folder to store the super-resolved images")
     args  = parser.parse_args()
+    
+    # Some Command
+    # python test_code/inference.py  --model RRDB --scale 2 --weight_path pretrained/2x_RRDB_GAN_generator.pth
 
     # Read argument and prepare the folder needed
     input_dir = args.input_dir
+    model = args.model
     weight_path = args.weight_path
     store_dir = args.store_dir
+    scale = args.scale
+    
 
     if os.path.exists(store_dir):
         shutil.rmtree(store_dir)
@@ -74,7 +82,11 @@ if __name__ == "__main__":
 
 
     # Load the model
-    generator = load_grl(weight_path, scale=4)  # The default scale is 4 right now
+    if model == "GRL":
+        generator = load_grl(weight_path, scale=scale)  # GRL for Real-World SR only support 4x upscaling
+    elif model == "RRDB":
+        generator = load_rrdb(weight_path, scale=scale)  # Can be any size
+
 
     # Iterate the input
     if os.path.isdir(store_dir):

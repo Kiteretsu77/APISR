@@ -80,7 +80,7 @@ def common_degradation(out, opt, kernels, process_id, verbose = False):
         # Only do the second downsample at 4x scale
         downsample_2nd_position = random.choices([0, 1, 2])[0]
     else:
-        print("We don't use the second resize")
+        # print("We don't use the second resize")
         downsample_2nd_position = -1
 
         
