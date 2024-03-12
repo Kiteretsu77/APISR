@@ -52,7 +52,7 @@ APISR aims at restoring and enhancing low-quality low-resolution anime images an
 
 ## <a name="Update"></a>Update 🔥🔥🔥
 - [x] Release Paper version implementation of APISR 
-- [ ] Release a version of weight (for 2x, 4x and more) that is more emphasized on user visual preference instead of metrics
+- [x] Release different upscaler factor weight (for 2x, 4x and more)
 - [ ] Gradio demo (maybe online)
 
 
@@ -84,7 +84,7 @@ sudo apt install ffmpeg
 
 
 ## <a name="inference"></a> Inference ⚡⚡⚡
-1. Download the weight of the paper from https://github.com/Kiteretsu77/APISR/releases/download/v0.1.0/4x_APISR_GRL_GAN_generator.pth (github release) or https://drive.google.com/file/d/1Ubj-1f7gmi-dWlK_aUVcScZAlzKtuBJ8/view?usp=sharing (Google Drive) and put the weight to "pretrained" folder. More weights can be found in [**Model Zoo**](docs/model_zoo.md).
+1. Download the weight of the paper from https://github.com/Kiteretsu77/APISR/releases/download/v0.1.0/4x_APISR_GRL_GAN_generator.pth (github release) or https://drive.google.com/file/d/1Ubj-1f7gmi-dWlK_aUVcScZAlzKtuBJ8/view?usp=sharing (Google Drive) and **put the weight to "pretrained" folder**. More weights can be found in [**Model Zoo**](docs/model_zoo.md).
 
 
 2. Then, Execute
