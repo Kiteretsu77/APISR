@@ -75,7 +75,7 @@ pip install -r requirements.txt
 pip uninstall tb-nightly tensorboard tensorflow-estimator tensorflow-gpu tf-estimator-nightly
 pip install tensorflow
 
-# Install FFMPEG [Only needed for training; inference will not involve ffmpeg] (the following is for linux system, Windows user can download ffmpeg from https://ffmpeg.org/download.html)
+# Install FFMPEG [Only needed for training; inference will not involve ffmpeg] (the following is for the linux system, Windows users can download ffmpeg from https://ffmpeg.org/download.html)
 sudo apt install ffmpeg
 ```
 
@@ -84,9 +84,7 @@ sudo apt install ffmpeg
 
 
 ## <a name="inference"></a> Inference ⚡⚡⚡
-1. Download the weight of the paper from https://github.com/Kiteretsu77/APISR/releases/download/v0.1.0/4x_APISR_GRL_GAN_generator.pth (github release) or https://drive.google.com/file/d/1Ubj-1f7gmi-dWlK_aUVcScZAlzKtuBJ8/view?usp=sharing (Google Drive) and **put the weight to "pretrained" folder**. More weights can be found in [**Model Zoo**](docs/model_zoo.md).
-
-
+1. Download the model weight from [**model zoo**](docs/model_zoo.md) and **put the weight to "pretrained" folder**.
 2. Then, Execute
     ```shell
     python test_code/inference.py --input_dir XXX  --weight_path XXX  --store_dir XXX
@@ -96,23 +94,23 @@ sudo apt install ffmpeg
 
 
 ## <a name="dataset_curation"></a> Dataset Curation 🧩
-1. All the dataset curation pipeline is under "dataset_curation_pipeline" folder. You can collect your own dataset by sending videos into the pipeline and get least compressed and the most informative images from the video sources. With a folder with video sources, you can execute the following to get a basic dataset:
+1. Our dataset curation pipeline is under **dataset_curation_pipeline** folder. You can collect your own dataset by sending videos into the pipeline and get the least compressed and the most informative images from the video sources. With a folder with video sources, you can execute the following to get a basic dataset:
 
     ```shell
     python dataset_curation_pipeline/collect.py --video_folder_dir XXXX --save_dir XXX
     ```
 
-2. Once you get an image dataset with various aspect ratio and resolution, you can run the following scripts
+2. Once you get an image dataset with various aspect ratios and resolutions, you can run the following scripts
 
-    Be careful to check **full_patch_source** && **degrade_hr_dataset_name** && **train_hr_dataset_name** (we will use there variables in opt.py setting of the training)
+    Be careful to check **full_patch_source** && **degrade_hr_dataset_name** && **train_hr_dataset_name** (we will use variables in **opt.py** setting of the training)
 
     ```shell
     bash scripts/prepare_datasets.sh
     ```
 
-    In order to decrease memory utilization and increase training efficiency, we pre-process all time consuming pseudo-GT (**train_hr_dataset_name**) at the dataset preparation stage. 
+    In order to decrease memory utilization and increase training efficiency, we pre-process all time-consuming pseudo-GT (**train_hr_dataset_name**) at the dataset preparation stage. 
     
-    But in order to create a natural input for prediction-oriented compression, in every epoch, the degradation started from the uncropped GT (**full_patch_source**) and LR synthetic images are concurrently stored. Cropped HR GT dataset (**degrade_hr_dataset_name**) is fixed in the dataset preparation stage and won't be modified during training.
+    But in order to create a natural input for prediction-oriented compression, in every epoch, the degradation started from the uncropped GT (**full_patch_source**), and LR synthetic images are concurrently stored. The cropped HR GT dataset (**degrade_hr_dataset_name**) is fixed in the dataset preparation stage and won't be modified during training.
     
 
 
@@ -121,7 +119,7 @@ sudo apt install ffmpeg
 
 **The whole training process can be done in one RTX3090/4090!**
 
-1. Prepare a dataset (AVC/API) which follow step 2 in [**Dataset Curation**](#dataset_curation)
+1. Prepare a dataset (AVC/API) which follows step 2 in [**Dataset Curation**](#dataset_curation)
 
 2. Train: Please check **opt.py** carefully to setup parameters you want (modifying **Frequently Changed Setting** is usually enough)
 
