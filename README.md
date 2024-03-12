@@ -89,7 +89,7 @@ sudo apt install ffmpeg
     ```shell
     python test_code/inference.py --input_dir XXX  --weight_path XXX  --store_dir XXX
     ```
-    The default argument of test_code/inference.py is capable to execute sample images from "__assets__" folder
+    If the weight you download is paper weight, the default argument of test_code/inference.py is capable of executing sample images from "__assets__" folder
 
 
 
