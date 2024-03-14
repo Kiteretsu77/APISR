@@ -118,7 +118,6 @@ class VGGFeatureExtractor(nn.Module):
                     continue
                 else:
                     # in some cases, we may want to change the default stride
-                    # 这里就是为了能够活性改变stride而设计的吧
                     modified_net[k] = nn.MaxPool2d(kernel_size=2, stride=pooling_stride)
             else:
                 modified_net[k] = v
@@ -211,7 +210,6 @@ class PerceptualLoss(nn.Module):
             range_norm=range_norm).cuda()
 
         self.criterion_type = criterion
-        # 虽然原本code有很多运行版本，但是就这个criterion就行
         self.criterion = torch.nn.L1Loss()
         self.vgg_type = vgg_type
 
@@ -234,7 +232,6 @@ class PerceptualLoss(nn.Module):
         if self.perceptual_weight > 0:
             percep_loss = 0
             for k in x_features.keys():
-                # 虽然原本code有很多运行版本，但是就这个loss计算就行
                 # save_img(x_features[k], str(k) + "_out")
                 # save_img(gt_features[k], str(k) + "_gt")
                 layer_weight = self.criterion(x_features[k], gt_features[k]) * self.layer_weights[k]
@@ -243,20 +240,10 @@ class PerceptualLoss(nn.Module):
         else:
             percep_loss = None
 
-        # style_loss 被省略了，因为style_weight默认为0
+        # No style_loss
 
         return percep_loss
 
-
-    # def get_heatmap(self, input, title):
-    #     x_features = self.vgg(input)
-    #     for k in x_features.keys():
-    #         output = tensor2np(x_features[k])[:,:,0]
-    #         print(output.shape)
-    #         cv2.imwrite(self.vgg_type+"_"+title+"_feature_"+str(k)+".png", output)
-
-    # def get_params_num(self):
-    #     self.vgg.get_params_num()
 
 
 if __name__ == "__main__":

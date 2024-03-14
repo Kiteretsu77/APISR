@@ -42,8 +42,9 @@ class GANLoss(nn.Module):
             raise NotImplementedError("We didn't implement this GAN type")
 
 
-    # 这里省略了wgan的内容，注意看后面觉得有没有用
-
+    # Skip wgan part here
+    
+    
     def get_target_label(self, input, target_is_real):
         """Get target label.
 

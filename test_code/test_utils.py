@@ -12,7 +12,7 @@ from architecture.cunet import UNet_Full
 
 
 def load_rrdb(generator_weight_PATH, scale, print_options=False):  
-    ''' A simpler API to load RRDB model
+    ''' A simpler API to load RRDB model from Real-ESRGAN
     Args:
         generator_weight_PATH (str): The path to the weight
         scale (int): the scaling factor
@@ -28,7 +28,7 @@ def load_rrdb(generator_weight_PATH, scale, print_options=False):
     if 'params_ema' in checkpoint_g:
         # For official ESRNET/ESRGAN weight
         weight = checkpoint_g['params_ema']
-        generator = RRDBNet(3, 3, scale=scale)    # Default blocks num (6)     
+        generator = RRDBNet(3, 3, scale=scale)    # Default blocks num is 6     
 
     elif 'params' in checkpoint_g:
         # For official ESRNET/ESRGAN weight
@@ -68,7 +68,7 @@ def load_rrdb(generator_weight_PATH, scale, print_options=False):
 
 
 def load_cunet(generator_weight_PATH, scale, print_options=False):
-    ''' A simpler API to load CUNET model
+    ''' A simpler API to load CUNET model from Real-CUGAN
     Args:
         generator_weight_PATH (str): The path to the weight
         scale (int): the scaling factor
@@ -76,6 +76,8 @@ def load_cunet(generator_weight_PATH, scale, print_options=False):
     Returns:
         generator (torch): the generator instance of the model
     '''  
+    # This func is deprecated now
+    
     if scale != 2:
         raise NotImplementedError("We only support 2x in CUNET")
 
@@ -91,7 +93,7 @@ def load_cunet(generator_weight_PATH, scale, print_options=False):
             iteration = checkpoint_g["iteration"]
         else:
             iteration = "NAN"
-        generator = UNet_Full()          # RRDB blocks num这里还没考虑
+        generator = UNet_Full()          
         # generator = torch.compile(generator)# torch.compile
         print(f"the generator weight is {loss} at iteration {iteration}")
 

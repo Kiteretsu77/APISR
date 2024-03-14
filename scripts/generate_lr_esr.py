@@ -97,7 +97,7 @@ def single_process(queue, opt, process_id):
 
         out = np2tensor(img_bgr) # tensor
 
-        # ESR Degradation execuation
+        # ESR Degradation execution
         obj_img.degradate_process(out, opt, store_path, process_id, verbose = False)
 
 
@@ -152,7 +152,7 @@ def generate_low_res_esr(org_opt, verbose=False):
         queue.put(None) # Used to end the process
     # print("All Process starts")
 
-    # TQDM wait progress
+    # tqdm wait progress
     for idx in tqdm(range(0, len(output_img_lists)), desc ="Degradation"):
         while True:
             if os.path.exists(output_img_lists[idx]):

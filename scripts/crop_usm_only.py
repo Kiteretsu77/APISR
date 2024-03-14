@@ -1,7 +1,3 @@
-'''
-    目前这个只是temporarly代替usm而已, 等这个方案确定以后再跟crop_images.py结合一下
-'''
-
 import argparse
 import cv2
 import numpy as np

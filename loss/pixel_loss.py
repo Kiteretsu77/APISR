@@ -5,6 +5,7 @@ import torch
 from torch import nn as nn
 import torch.nn.functional as F
 
+
 class PixelLoss(nn.Module):
     def __init__(self) -> None:
         super(PixelLoss, self).__init__()
@@ -19,7 +20,6 @@ class PixelLoss(nn.Module):
         return pixel_loss
     
 
-
 class L1_Charbonnier_loss(nn.Module):
     """L1 Charbonnierloss."""
     def __init__(self):
@@ -33,44 +33,6 @@ class L1_Charbonnier_loss(nn.Module):
         return loss
     
 
-
-
-# class MS_SSIM_L1_LOSS(nn.Module):
-#     # Have to use cuda, otherwise the speed is too slow.
-#     def __init__(self, alpha, data_range=1.0):
-#         '''
-#         Args:
-#             alpha (float): the ratio of ms-ssim loss and the l1 loss is (1-alpha)
-#             data_range (float): the input range (1.0 for tensor)
-#         '''
-#         super(MS_SSIM_L1_LOSS, self).__init__()
-#         self.ms_ssim_module = MS_SSIM(data_range=data_range, size_average=True, channel=3, K=(0.01, 0.4))
-#         self.l1_module = torch.nn.L1Loss().cuda() 
-
-#         self.alpha = alpha
-
-#         from torch.utils.tensorboard import SummaryWriter
-#         self.writer = SummaryWriter() 
-
-
-#     def forward(self, x, y, batch_idx):
-#         '''
-#         Args:
-#             x (tensor): the input for a tensor
-#             y (tensor): the input for another tensor
-#             batch_idx (int): the iteration now
-#         Returns:
-#             combined_loss (torch): loss value of L1 with MS-SSIM loss
-#         '''
-#         ms_ssim_loss = 1 - self.ms_ssim_module(x, y)
-#         l1_loss = self.l1_module(x, y)
-
-#         combined_loss =  self.alpha * ms_ssim_loss + (1-self.alpha) * l1_loss 
-
-#         self.writer.add_scalar('Loss/ms_ssim_loss-iteration', ms_ssim_loss, batch_idx)
-#         self.writer.add_scalar('Loss/l1_loss-iteration', l1_loss, batch_idx)
-#         return combined_loss
-    
 
 """
 Created on Thu Dec  3 00:28:15 2020

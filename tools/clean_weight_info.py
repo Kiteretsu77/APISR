@@ -6,7 +6,7 @@ import torch
 
 if __name__ == "__main__":
     weight_path = "saved_models/esrgan_best_generator.pth"
-    store_path = "2x_RRDB_GAN_generator.pth"
+    store_path = "1x_APISR_RRDB_GAN_generator.pth"
 
     # Load the checkpoint
     checkpoint_g = torch.load(weight_path)

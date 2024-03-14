@@ -56,7 +56,7 @@ def XDoG(image, size, sigma, eps, phi, k=1.6, gamma=1.):
 
 class USMSharp(torch.nn.Module):
     '''
-        基本上是Real-ESRGAN直接USM搬来的
+        Basically, the same as Real-ESRGAN
     '''
 
     def __init__(self, type, radius=50, sigma=0):
@@ -120,7 +120,6 @@ def get_xdog_sketch_map(img_bgr, outlier_threshold):
 
 
 def process_single_img(queue, usm_sharper, extra_sharpen_time, outlier_threshold):
-    # anime2sketch_obj = anime2sketch()
 
     counter = 0
     while True:
@@ -139,10 +138,6 @@ def process_single_img(queue, usm_sharper, extra_sharpen_time, outlier_threshold
         print("We are processing ", img_dir)
         img = cv2.imread(img_dir)
 
-        # 目前的方案: sketch以外的只sharpen一次，sketch提取两次sharpen后的出来
-        # 1. Sharpen original image 最为base
-        # 2. 提取sharpened后的sketch再对sketch做一层单独的sharpenning？
-        # 3. 两者加回来
         img = usm_sharper(img, store=False, threshold=10)
         first_sharpened_img = copy.deepcopy(img)
 
@@ -151,9 +146,8 @@ def process_single_img(queue, usm_sharper, extra_sharpen_time, outlier_threshold
             img = usm_sharper(img, store=False, threshold=10)
             # img = (sharpened_img * sketch_map) + (org_img * (1-sketch_map))
 
-        # 所有sketch用连续sharpen后的，其他的用只sharpen一次后的
         sketch_map = get_xdog_sketch_map(img, outlier_threshold)
-        img = (img * sketch_map) + (first_sharpened_img * (1-sketch_map))  # 比起用1-sketch_map， 我觉得用~sketch_map可能更加稳定
+        img = (img * sketch_map) + (first_sharpened_img * (1-sketch_map))  
 
         
         cv2.imwrite(store_path, img)
@@ -268,7 +262,6 @@ def outlier_removal(img, outlier_threshold):
             for u, v in visited:
                 global_list.add((u, v))
 
-
     return temp
 
 
@@ -285,7 +278,7 @@ def active_dilate(img):
 
 
 def passive_dilate(img):
-    # 9宫格位置如果有3个地方是白色，那么就这个fill in
+    # IF there is 3 white pixel in 9 block, we will fill in
     h,w = img.shape
 
     def detect_fill(i, j):
@@ -331,16 +324,10 @@ def gen_xdog_image(gray, outlier_threshold):
 
 
     # Remove unnecessary outlier
-    # cv2.imwrite("before_remove.png", dogged*255)
-
     dogged = outlier_removal(dogged, outlier_threshold)
 
-    # cv2.imwrite("after_remove.png", dogged*255)
-
     # Dilate the image
-    # dogged = active_dilate(dogged)
     dogged = passive_dilate(dogged)
-    # cv2.imwrite("passive_dilate.png", dogged*255)
 
     
     return dogged

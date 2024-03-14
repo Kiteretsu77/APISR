@@ -39,7 +39,7 @@ def parse_args():
 
     
     if not args.auto_resume_closest and not args.auto_resume_best:
-        # 重新启动tensorboard (delete all things under ./runs)
+        # Restart tensorboard (delete all things under ./runs)
         if os.path.exists("./runs"):
             storage_manage()
             shutil.rmtree("./runs")

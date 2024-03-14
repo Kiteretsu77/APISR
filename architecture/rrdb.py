@@ -2,7 +2,7 @@
 
 # Paper Github Repository: https://github.com/xinntao/Real-ESRGAN
 # Code snippet from: https://github.com/XPixelGroup/BasicSR/blob/master/basicsr/archs/rrdbnet_arch.py
-# Pape: https://arxiv.org/pdf/2107.10833.pdf
+# Paper: https://arxiv.org/pdf/2107.10833.pdf
 
 import os, sys
 import torch

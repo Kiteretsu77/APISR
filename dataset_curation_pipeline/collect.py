@@ -25,9 +25,9 @@ class video_scoring:
 
 
     def select_frame(self, skip_num, img_lists, target_frame_num, save_dir, output_name_head, partition_idx):
-        ''' Executation of scoring to all I-Frame in img_folder and select target_frame to return back
+        ''' Execution of scoring to all I-Frame in img_folder and select target_frame to return back
         Args:
-            skip_num (int):         Only 1 in skip_num will be choosen to accelearte.
+            skip_num (int):         Only 1 in skip_num will be chosen to accelerate.
             img_lists (str):        The image lists of all files we want to process
             target_frame_num (int): The number of frames we need to choose
             save_dir (str):         The path where we save those images
@@ -38,7 +38,7 @@ class video_scoring:
         stores = []
         for idx, image_path in enumerate(sorted(img_lists)):
             if idx % skip_num != 0:
-                # We only process 1 in 3 to accelerate and also prevent minor case of repeative scene.
+                # We only process 1 in 3 to accelerate and also prevent minor case of repeated scene.
                 continue
 
 
@@ -69,9 +69,9 @@ class video_scoring:
 
 
     def run(self, skip_num, img_folder, target_frame_num, save_dir, output_name_head, partition_num):
-        ''' Executation of scoring to all I-Frame in img_folder and select target_frame to return back
+        ''' Execution of scoring to all I-Frame in img_folder and select target_frame to return back
         Args:
-            skip_num (int):         Only 1 in skip_num will be choosen to accelearte.
+            skip_num (int):         Only 1 in skip_num will be chosen to accelerate.
             img_folder (str):       The image folder of all I-Frames we need to process
             target_frame_num (int): The number of frames we need to choose
             save_dir (str):         The path where we save those images
@@ -129,7 +129,7 @@ class frame_collector:
             video_folder_dir (str):     The directory of all videos input
             save_dir (str):             The directory we will store the selected frames
             tmp_path (str):             A temporary working places to work and will be delete at the end
-            skip_num (int):             Only 1 in skip_num will be choosen to accelearte.
+            skip_num (int):             Only 1 in skip_num will be chosen to accelerate.
             target_frames (list):       [# of frames for video under 30 min, # of frames for video over 30 min] 
             partition_num (int):    The number of partition we want to crop the video to   
         '''
@@ -180,7 +180,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--video_folder_dir', type = str, default = '', help = "A folder with video sources")
     parser.add_argument('--save_dir', type = str, default = 'filtered_dataset', help = "The folder to store filtered dataset")
-    parser.add_argument('--skip_num', type = int, default = 5, help = "Only 1 in skip_num will be choosen in sequential I-frames to accelearte.")
+    parser.add_argument('--skip_num', type = int, default = 5, help = "Only 1 in skip_num will be chosen in sequential I-frames to accelerate.")
     parser.add_argument('--target_frames', type = list, default = [16, 24], help = "[# of frames for video under 30 min, # of frames for video over 30 min]")
     parser.add_argument('--partition_num', type = int, default = 8, help = "The number of partition we want to crop the video to, to increase diversity of sampling")
     parser.add_argument('--verbose', type = bool, default = True, help = "Whether we print log message")

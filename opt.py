@@ -10,7 +10,7 @@ opt['architecture'] = "GRL"                # "ESRNET" || "ESRGAN" || "GRL" || "G
 
 
 # Essential Setting
-opt['scale'] = 4                         # In default, this is 4x
+opt['scale'] = 4                                                    # In default, this is 4x
 opt["full_patch_source"] = "../APISR_dataset"                       # The HR image without cropping 
 opt["degrade_hr_dataset_name"] = "datasets/train_hr"                # The cropped GT images
 opt["train_hr_dataset_name"] = "datasets/train_hr_enhanced"         # The cropped Pseudo-GT path (after hand-drawn line enhancement)
@@ -57,8 +57,8 @@ if opt['architecture'] == "ESRNET":
 
     # Learning Rate
     opt["start_learning_rate"] = 0.0002      # Training Epoch, use the as Real-ESRGAN: 0.0001 - 0.0002 is ok, based on your need
-    opt['decay_iteration'] = 100000           # Decay iteration  
-    opt['double_milestones'] = []         # Iteration based time you double your learning rate
+    opt['decay_iteration'] = 100000          # Decay iteration  
+    opt['double_milestones'] = []            # Iteration based time you double your learning rate
 
 
 elif opt['architecture'] == "ESRGAN":
@@ -69,7 +69,7 @@ elif opt['architecture'] == "ESRGAN":
     opt['train_batch_size'] = 32             #      
     
     # Learning Rate
-    opt["start_learning_rate"] = 0.0001      # Training Epoch, use the as Real-ESRGAN: 0.0001 - 0.0002 is ok, based on your need
+    opt["start_learning_rate"] = 0.0001   # Training Epoch, use the as Real-ESRGAN: 0.0001 - 0.0002 is ok, based on your need
     opt['decay_iteration'] = 100000       # Fixed decay gap
     opt['double_milestones'] = []         # Just put this empty
     
@@ -110,12 +110,12 @@ elif opt['architecture'] == "CUGAN":
     opt["gan_loss_weight"] = 0.2   # This one is very important, Don't neglect it. Based on the paper, it should be 0.1 scale
 
     opt['decay_iteration'] = 100000                              # Decay iteration  
-    opt['double_milestones'] = []         # Iteration based time you double your learning rate
+    opt['double_milestones'] = []            # Iteration based time you double your learning rate
 
 
-elif opt['architecture'] == "GRL":        # L1 loss training version
+elif opt['architecture'] == "GRL":           # L1 loss training version
     # Setting for GRL Training 
-    opt['model_size'] = "tiny2"               # "small" || "tiny" || "tiny2"
+    opt['model_size'] = "tiny2"              # "tiny2" in default
     
     opt['train_iterations'] = 300000         # Training Iterations
     opt['train_batch_size'] = 32             # 4x: 32 (256x256); 2x:  4?  
@@ -126,7 +126,7 @@ elif opt['architecture'] == "GRL":        # L1 loss training version
     opt['double_milestones'] = []            # Iteration based time you double your learning rate (Just ignore this one)
 
 
-elif opt['architecture'] == "GRLGAN":   # L1 + Preceptual + Discriminator Loss version
+elif opt['architecture'] == "GRLGAN":         # L1 + Preceptual + Discriminator Loss version
     # Setting for GRL Training
     opt['model_size'] = "tiny2"               # "small" || "tiny" || "tiny2"  (Use tiny2 by default, No need to change)
 
@@ -136,8 +136,8 @@ elif opt['architecture'] == "GRLGAN":   # L1 + Preceptual + Discriminator Loss v
     
     # Learning Rate
     opt["start_learning_rate"] = 0.0001      # Training Epoch, use the as Real-ESRGAN: 0.0001 - 0.0002 is ok, based on your need
-    opt['decay_iteration'] = 100000       # Fixed decay gap
-    opt['double_milestones'] = []         # Just put this empty
+    opt['decay_iteration'] = 100000          # Fixed decay gap
+    opt['double_milestones'] = []            # Just put this empty
     
     # Perceptual loss
     opt["danbooru_perceptual_loss_weight"] = 0.5        # ResNet50 Danbooru Perceptual loss weight scale
@@ -161,7 +161,7 @@ opt["degradation_batch_size"] = 128                 # Degradation batch size
 opt["augment_prob"] = 0.5                           # Probability of augmenting (Flip, Rotate) the HR and LR dataset in dataset loading part                                
 
 
-if opt['architecture'] in ["ESRNET", "ESRGAN", "GRL", "GRLGAN", "CUNET", "CUGAN"]:        # 这里包含mixed BSR（所以mixed的时候要用ESRNET才不会出bug）
+if opt['architecture'] in ["ESRNET", "ESRGAN", "GRL", "GRLGAN", "CUNET", "CUGAN"]:       
     # Parallel Process
     opt['parallel_num'] = 8  # Multi-Processing num; Recommend 6
 
@@ -219,7 +219,7 @@ if opt['architecture'] in ["ESRNET", "ESRGAN", "GRL", "GRLGAN", "CUNET", "CUGAN"
 
     
     ######################################## Setting for Degradation with Intra-Prediction ########################################
-    opt['compression_codec2'] = ["jpeg", "webp", "avif", "mpeg2", "mpeg4", "h264", "h265"]     # Compression codec: similar to VCISR but more intense degradation
+    opt['compression_codec2'] = ["jpeg", "webp", "avif", "mpeg2", "mpeg4", "h264", "h265"]     # Compression codec: similar to VCISR but more intense degradation settings
     opt['compression_codec_prob2'] = [0.06, 0.1, 0.1, 0.12, 0.12, 0.3, 0.2] 
 
     # Image compression setting
