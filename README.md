@@ -144,6 +144,14 @@ sudo apt install ffmpeg
 
 ## Citation
 Please cite us if our work is useful for your research.
+```
+@article{wang2024apisr,
+  title={APISR: Anime Production Inspired Real-World Anime Super-Resolution},
+  author={Wang, Boyang and Yang, Fengyu and Yu, Xihang and Zhang, Chao and Zhao, Hanbin},
+  journal={arXiv preprint arXiv:2403.01598},
+  year={2024}
+}
+```
 
 ## Disclaimer
 This project is released for academic use only. We disclaim responsibility for the distribution of the dataset. Users are solely liable for their actions. 
