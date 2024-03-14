@@ -130,9 +130,9 @@ sudo apt install ffmpeg
     The model weights will be inside the folder 'saved_models' (same to checkpoints)
 
     **Step2** (GAN **Adversarial** Training): 
-    1. Change opt['architecture'] in **opt.py** as "GRLGAN" and change other **batch size** information if you need.
+    1. Change opt['architecture'] in **opt.py** to "GRLGAN" and change **batch size** if you need. BTW, I don't think that, for personal training, it is needed to train 300K iter for GAN. I did that in order to follow the same setting as AnimeSR and VQDSR, but **100K ~ 130K** should have a decent visual result.
 
-    2. Following previous works, GAN should start from L1 loss pretrained network, so please carry a **pretrained_path** (the default below should be fine)
+    2. Following previous works, GAN should start from L1 loss pre-trained network, so please carry a **pretrained_path** (the default path below should be fine)
     ```shell
     python train_code/train.py --pretrained_path saved_models/grl_best_generator.pth 
     ```
