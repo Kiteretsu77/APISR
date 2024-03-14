@@ -71,7 +71,8 @@ conda activate APISR
 pip install torch==2.1.1 torchvision==0.16.1 torchaudio==2.1.1 --index-url https://download.pytorch.org/whl/cu118
 pip install -r requirements.txt
 
-# To be absolutely sure that tensorboard can execute. I recommend the following CMD from https://github.com/pytorch/pytorch/issues/22676#issuecomment-534882021
+
+# To be absolutely sure that the tensorboard can execute. I recommend the following CMD from "https://github.com/pytorch/pytorch/issues/22676#issuecomment-534882021"
 pip uninstall tb-nightly tensorboard tensorflow-estimator tensorflow-gpu tf-estimator-nightly
 pip install tensorflow
 
