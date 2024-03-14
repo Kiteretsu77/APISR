@@ -13,7 +13,7 @@ requests==2.31.0
 pyyaml==6.0.1
 kornia==0.7.0
 
-# Relatively dynamic library (We think that these libraries may frequenctly modify their API, so it is better to use the same version as belong)
+# Relatively dynamic library (We think that these libraries may frequently modify their API, so it is better to use the same version as below)
 pyiqa==0.1.7
 pthflops==0.4.2
 pillow-heif==0.13.0
