@@ -18,12 +18,13 @@ from test_code.test_utils import load_grl, load_rrdb, load_cunet
 
 
 @torch.no_grad      # You must add these time, else it will have Out of Memory
-def super_resolve_img(generator, input_path, output_path, crop_for_4x = True):
+def super_resolve_img(generator, input_path, output_path, weight_dtype, crop_for_4x = True):
     ''' Super Resolve a low resolution image
     Args:
         generator (torch):              the generator class that is already loaded
         input_path (str):               the path to the input lr images
         output_path (str):              the directory to store the generated images
+        weight_dtype (bool):            the weight type (float32/float16)
         crop_for_4x (bool):             whether we crop the lr images to match 4x scale (needed for some situation)
     '''
     print("Processing image {}".format(input_path))
@@ -41,6 +42,7 @@ def super_resolve_img(generator, input_path, output_path, crop_for_4x = True):
     # Transform to tensor
     img_lr = cv2.cvtColor(img_lr, cv2.COLOR_BGR2RGB)
     img_lr = ToTensor()(img_lr).unsqueeze(0).cuda()     # Use tensor format
+    img_lr = img_lr.to(dtype=weight_dtype)
     
     
     # Model inference
@@ -63,13 +65,14 @@ if __name__ == "__main__":
     parser.add_argument('--input_dir', type = str, default='__assets__/lr_inputs', help="Can be either single image input or a folder input")
     parser.add_argument('--model', type = str, default='GRL', help=" 'GRL' || 'RRDB' (for ESRNET & ESRGAN) || 'CUNET' (for Real-ESRGAN) ")
     parser.add_argument('--scale', type = int, default=4, help="Up scaler factor")
-    parser.add_argument('--weight_path', type = str, default='pretrained/4x_APISR_GRL_GAN_generator.pth', help="Weight path directory, usually uner saved_models folder")
+    parser.add_argument('--weight_path', type = str, default='pretrained/4x_APISR_GRL_GAN_generator.pth', help="Weight path directory, usually under saved_models folder")
     parser.add_argument('--store_dir', type = str, default='sample_outputs', help="The folder to store the super-resolved images")
-    args  = parser.parse_args()
+    parser.add_argument('--float16_inference', type = bool, default=False, help="The folder to store the super-resolved images")
+    args = parser.parse_args()
     
     # Sample Command
     # 4x GRL (Default):     python test_code/inference.py --model GRL --scale 4 --weight_path pretrained/4x_APISR_GRL_GAN_generator.pth
-    # 2x RRDB:              python test_code/inference.py --model RRDB --scale 2 --weight_path pretrained/2x_RRDB_GAN_generator.pth
+    # 2x RRDB:              python test_code/inference.py --model RRDB --scale 2 --weight_path pretrained/2x_APISR_RRDB_GAN_generator.pth
 
 
     # Read argument and prepare the folder needed
@@ -78,6 +81,7 @@ if __name__ == "__main__":
     weight_path = args.weight_path
     store_dir = args.store_dir
     scale = args.scale
+    float16_inference = args.float16_inference
     
     
     # Check the path of the weight
@@ -93,12 +97,21 @@ if __name__ == "__main__":
     os.makedirs(store_dir)
 
 
+
+    # Define the weight type
+    if float16_inference:
+        weight_dtype = torch.float16
+    else:
+        weight_dtype = torch.float32
+        
+
     # Load the model
     if model == "GRL":
         generator = load_grl(weight_path, scale=scale)  # GRL for Real-World SR only support 4x upscaling
     elif model == "RRDB":
         generator = load_rrdb(weight_path, scale=scale)  # Can be any size
-
+    generator = generator.to(dtype=weight_dtype)
+    
 
     # Take the input path and do inference
     if os.path.isdir(store_dir):    # If the input is a directory, we will iterate it
@@ -106,13 +119,13 @@ if __name__ == "__main__":
             input_path = os.path.join(input_dir, filename)
             output_path = os.path.join(store_dir, filename)
             # In default, we will automatically use crop to match 4x size
-            super_resolve_img(generator, input_path, output_path, crop_for_4x=True)
+            super_resolve_img(generator, input_path, output_path, weight_dtype, crop_for_4x=True)
             
     else:   # If the input is a single image, we will process it directly and write on the same folder
         filename = os.path.split(input_dir)[-1].split('.')[0]
         output_path = os.path.join(store_dir, filename+"_"+str(scale)+"x.png")
         # In default, we will automatically use crop to match 4x size
-        super_resolve_img(generator, input_dir, output_path, crop_for_4x=True)
+        super_resolve_img(generator, input_dir, output_path, weight_dtype, crop_for_4x=True)
 
     
 
