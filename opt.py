@@ -11,9 +11,9 @@ opt['architecture'] = "GRL"                # "ESRNET" || "ESRGAN" || "GRL" || "G
 
 # Essential Setting
 opt['scale'] = 4                                                    # In default, this is 4x
-opt["full_patch_source"] = "../APISR_dataset"                       # The HR image without cropping 
-opt["degrade_hr_dataset_name"] = "datasets/train_hr"                # The cropped GT images
-opt["train_hr_dataset_name"] = "datasets/train_hr_enhanced"         # The cropped Pseudo-GT path (after hand-drawn line enhancement)
+opt["full_patch_source"] = "../datasets_anime/APISR_dataset"        # The HR image without cropping 
+opt["degrade_hr_dataset_path"] = "datasets/train_hr"                # The cropped GT images
+opt["train_hr_dataset_path"] = "datasets/train_hr_enhanced"         # The cropped Pseudo-GT path (after hand-drawn line enhancement)
 ################################################################################################################################
 
 # GPU setting
@@ -24,7 +24,7 @@ os.environ['CUDA_VISIBLE_DEVICES'] = opt['CUDA_VISIBLE_DEVICES']
 ##################################################### Setting for General Training #############################################
 
 # Dataset Setting
-opt["lr_dataset_name"] = "datasets/train_lr"                        # Where you temporally store the LR synthetic images
+opt["lr_dataset_path"] = "datasets/train_lr"                        # Where you temporally store the LR synthetic images
 opt['hr_size'] = 256
 
 

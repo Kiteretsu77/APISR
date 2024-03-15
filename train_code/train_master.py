@@ -132,11 +132,11 @@ class train_master(object):
         self.generate_lr()
 
         # Load data
-        train_lr_paths = glob.glob(self.options["lr_dataset_name"] + "/*.*")
-        degrade_hr_paths = glob.glob(self.options["degrade_hr_dataset_name"] + "/*.*")
-        train_hr_paths = glob.glob(self.options["train_hr_dataset_name"] + "/*.*")
+        train_lr_paths = glob.glob(self.options["lr_dataset_path"] + "/*.*")
+        degrade_hr_paths = glob.glob(self.options["degrade_hr_dataset_path"] + "/*.*")
+        train_hr_paths = glob.glob(self.options["train_hr_dataset_path"] + "/*.*")
         train_dataloader = DataLoader(ImageDataset(train_lr_paths, degrade_hr_paths, train_hr_paths), batch_size=self.batch_size, shuffle=True, num_workers=self.n_cpu)  # ONLY LOAD HALF OF CPU AVAILABLE
-        dataset_length = len(os.listdir(self.options["train_hr_dataset_name"]))
+        dataset_length = len(os.listdir(self.options["train_hr_dataset_path"]))
 
 
         # Check if we need to load weight
@@ -355,9 +355,9 @@ class train_master(object):
 
 
         # Assert check
-        lr_paths = os.listdir(self.options["lr_dataset_name"])
-        degrade_hr_paths = os.listdir(self.options["degrade_hr_dataset_name"])
-        hr_paths = os.listdir(self.options["train_hr_dataset_name"])
+        lr_paths = os.listdir(self.options["lr_dataset_path"])
+        degrade_hr_paths = os.listdir(self.options["degrade_hr_dataset_path"])
+        hr_paths = os.listdir(self.options["train_hr_dataset_path"])
         
         assert(len(lr_paths) == len(degrade_hr_paths))  
         assert(len(lr_paths) == len(hr_paths))

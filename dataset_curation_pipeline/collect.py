@@ -16,11 +16,12 @@ from dataset_curation_pipeline.IC9600.ICNet import ICNet
 
 
 class video_scoring:
-    def __init__(self) -> None:
+    
+    def __init__(self, IC9600_pretrained_weight_path) -> None:
 
         # Init the model
         self.scorer = ICNet()
-        self.scorer.load_state_dict(torch.load('pretrained/ck.pth',map_location=torch.device('cpu')))
+        self.scorer.load_state_dict(torch.load(IC9600_pretrained_weight_path, map_location=torch.device('cpu')))
         self.scorer.eval().cuda()
 
 
@@ -95,8 +96,10 @@ class video_scoring:
 
 
 class frame_collector:
-    def __init__(self, verbose) -> None:
-        self.scoring = video_scoring()
+    
+    def __init__(self, IC9600_pretrained_weight_path, verbose) -> None:
+        
+        self.scoring = video_scoring(IC9600_pretrained_weight_path)
         self.verbose = verbose
 
 
@@ -114,7 +117,6 @@ class frame_collector:
         
 
         # Split Video I-frame
-        # "-frame_pts true" can directly help you point to the same frame name order
         cmd = "ffmpeg -i " + video_path + " -loglevel error -vf select='eq(pict_type\,I)' -vsync 2 -f image2 -q:v 1 " + tmp_path + "/image-%06d.png"  # At most support 100K I-Frames per video
 
         if self.verbose:
@@ -131,7 +133,7 @@ class frame_collector:
             tmp_path (str):             A temporary working places to work and will be delete at the end
             skip_num (int):             Only 1 in skip_num will be chosen to accelerate.
             target_frames (list):       [# of frames for video under 30 min, # of frames for video over 30 min] 
-            partition_num (int):    The number of partition we want to crop the video to   
+            partition_num (int):        The number of partition we want to crop the video to   
         '''
 
         # Iterate all video under video_folder_dir
@@ -178,17 +180,19 @@ if __name__ == "__main__":
 
     # Fundamental setting
     parser = argparse.ArgumentParser()
-    parser.add_argument('--video_folder_dir', type = str, default = '', help = "A folder with video sources")
-    parser.add_argument('--save_dir', type = str, default = 'filtered_dataset', help = "The folder to store filtered dataset")
-    parser.add_argument('--skip_num', type = int, default = 5, help = "Only 1 in skip_num will be chosen in sequential I-frames to accelerate.")
-    parser.add_argument('--target_frames', type = list, default = [16, 24], help = "[# of frames for video under 30 min, # of frames for video over 30 min]")
-    parser.add_argument('--partition_num', type = int, default = 8, help = "The number of partition we want to crop the video to, to increase diversity of sampling")
-    parser.add_argument('--verbose', type = bool, default = True, help = "Whether we print log message")
+    parser.add_argument('--video_folder_dir', type = str, default = '../anime_videos',                  help = "A folder with video sources")
+    parser.add_argument('--IC9600_pretrained_weight_path', type = str, default = "pretrained/ck.pth",   help = "The pretrained IC9600 weight")
+    parser.add_argument('--save_dir', type = str, default = 'filtered_dataset',                         help = "The folder to store filtered dataset")
+    parser.add_argument('--skip_num', type = int, default = 5,                                          help = "Only 1 in skip_num will be chosen in sequential I-frames to accelerate.")
+    parser.add_argument('--target_frames', type = list, default = [16, 24],                             help = "[# of frames for video under 30 min, # of frames for video over 30 min]")
+    parser.add_argument('--partition_num', type = int, default = 8,                                     help = "The number of partition we want to crop the video to, to increase diversity of sampling")
+    parser.add_argument('--verbose', type = bool, default = True,                                       help = "Whether we print log message")
     args  = parser.parse_args()
 
 
     # Transform to variable
     video_folder_dir = args.video_folder_dir
+    IC9600_pretrained_weight_path = args.IC9600_pretrained_weight_path
     save_dir = args.save_dir
     skip_num = args.skip_num
     target_frames = args.target_frames  # [# of frames for video under 30 min, # of frames for video over 30 min]    
@@ -209,7 +213,7 @@ if __name__ == "__main__":
     # Process
     start = time.time()
 
-    obj = frame_collector(verbose)
+    obj = frame_collector(IC9600_pretrained_weight_path, verbose)
     obj.collect_frames(video_folder_dir, save_dir, tmp_path, skip_num, target_frames, partition_num)
 
     total_time = (time.time() - start)//60

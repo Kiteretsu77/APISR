@@ -76,7 +76,7 @@ pip install -r requirements.txt
 pip uninstall tb-nightly tensorboard tensorflow-estimator tensorflow-gpu tf-estimator-nightly
 pip install tensorflow
 
-# Install FFMPEG [Only needed for training; inference will not involve ffmpeg] (the following is for the linux system, Windows users can download ffmpeg from https://ffmpeg.org/download.html)
+# Install FFMPEG [Only needed for training and dataset curation stage; inference only does not need ffmpeg] (the following is for the linux system, Windows users can download ffmpeg from https://ffmpeg.org/download.html)
 sudo apt install ffmpeg
 ```
 
@@ -95,23 +95,29 @@ sudo apt install ffmpeg
 
 
 ## <a name="dataset_curation"></a> Dataset Curation 🧩
-1. Our dataset curation pipeline is under **dataset_curation_pipeline** folder. You can collect your own dataset by sending videos into the pipeline and get the least compressed and the most informative images from the video sources. With a folder with video sources, you can execute the following to get a basic dataset:
+Our dataset curation pipeline is under **dataset_curation_pipeline** folder. 
+
+You can collect your own dataset by sending videos into the pipeline and get the least compressed and the most informative images from the video sources. 
+
+1.  Download [IC9600](https://github.com/tinglyfeng/IC9600?tab=readme-ov-file) weight (ck.pth) from https://drive.google.com/drive/folders/1N3FSS91e7FkJWUKqT96y_zcsG9CRuIJw and place it at "pretrained/" folder (else, you can define a different **--IC9600_pretrained_weight_path** in the following collect.py execution)
+
+2.  With a folder with video sources, you can execute the following to get a basic dataset (with **ffmpeg** installed):
 
     ```shell
-    python dataset_curation_pipeline/collect.py --video_folder_dir XXXX --save_dir XXX
+    python dataset_curation_pipeline/collect.py --video_folder_dir XXX --save_dir XXX
     ```
 
-2. Once you get an image dataset with various aspect ratios and resolutions, you can run the following scripts
+3. Once you get an image dataset with various aspect ratios and resolutions, you can run the following scripts
 
-    Be careful to check **full_patch_source** && **degrade_hr_dataset_name** && **train_hr_dataset_name** (we will use variables in **opt.py** setting of the training)
+    Be careful to check **full_patch_source** && **degrade_hr_dataset_path** && **train_hr_dataset_path** (we will use these variables in **opt.py** setting during training stage)
 
     ```shell
     bash scripts/prepare_datasets.sh
     ```
 
-    In order to decrease memory utilization and increase training efficiency, we pre-process all time-consuming pseudo-GT (**train_hr_dataset_name**) at the dataset preparation stage. 
+    In order to decrease memory utilization and increase training efficiency, we pre-process all time-consuming pseudo-GT (**train_hr_dataset_path**) at the dataset preparation stage. 
     
-    But in order to create a natural input for prediction-oriented compression, in every epoch, the degradation started from the uncropped GT (**full_patch_source**), and LR synthetic images are concurrently stored. The cropped HR GT dataset (**degrade_hr_dataset_name**) is fixed in the dataset preparation stage and won't be modified during training.
+    But in order to create a natural input for prediction-oriented compression, in every epoch, the degradation started from the uncropped GT (**full_patch_source**), and LR synthetic images are concurrently stored. The cropped HR GT dataset (**degrade_hr_dataset_path**) is fixed in the dataset preparation stage and won't be modified during training.
     
 
 

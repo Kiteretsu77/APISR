@@ -25,12 +25,12 @@ os.environ['CUDA_VISIBLE_DEVICES'] = opt['CUDA_VISIBLE_DEVICES']  #'0,1'
 
 
 
-def crop_process(path, crop_size, lr_dataset_name, output_index):
+def crop_process(path, crop_size, lr_dataset_path, output_index):
     ''' crop the image here (also do usm here)
     Args:
         path (str):             Path of the image
         crop_size (int):        Crop size
-        lr_dataset_name (str):  LR dataset path folder name
+        lr_dataset_path (str):  LR dataset path folder name
         output_index (int):     The index we used to store images
     Returns:
         output_index (int):     The next index we need to use to store images
@@ -64,7 +64,7 @@ def crop_process(path, crop_size, lr_dataset_name, output_index):
     for (h, w) in res_store:
         cropped_img = img[h+shift_offset_h : h+crop_size+shift_offset_h, w+shift_offset_w : w+crop_size+shift_offset_w, ...]
         cropped_img = np.ascontiguousarray(cropped_img)
-        cv2.imwrite(osp.join(lr_dataset_name, f'img_{output_index:06d}.png'), cropped_img, [cv2.IMWRITE_PNG_COMPRESSION, 0])     # Save in lossless mode
+        cv2.imwrite(osp.join(lr_dataset_path, f'img_{output_index:06d}.png'), cropped_img, [cv2.IMWRITE_PNG_COMPRESSION, 0])     # Save in lossless mode
 
         output_index += 1
 
@@ -183,7 +183,7 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--input', type=str, default = opt["full_patch_source"], help='Input folder')
-    parser.add_argument('--output', type=str, default = opt["lr_dataset_name"], help='Output folder')
+    parser.add_argument('--output', type=str, default = opt["lr_dataset_path"], help='Output folder')
     args = parser.parse_args()
 
     main(args)
