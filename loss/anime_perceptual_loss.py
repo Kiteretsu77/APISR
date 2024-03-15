@@ -341,7 +341,7 @@ class resnet50_Extractor(nn.Module):
         self.activation = {}
 
 
-        # 提取需要的features (默认前面带一个0，因为有head做了一个sequential)
+        # Extract needed features
         for layer_label in layer_labels:
             elements = layer_label.split('_')
             if len(elements) == 1:
@@ -451,7 +451,6 @@ class Anime_PerceptualLoss(nn.Module):
         if self.perceptual_weight > 0:
             percep_loss = 0
             for idx, k in enumerate(gen_features.keys()):
-                # 虽然原本code有很多运行版本，但是就这个loss计算就行
                 raw_comparison = self.criterion(gen_features[k], gt_features[k])
                 percep_loss += raw_comparison * self.layer_weights[k]
 

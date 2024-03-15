@@ -62,12 +62,12 @@ if __name__ == "__main__":
     
     # Fundamental setting
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input_dir', type = str, default='__assets__/lr_inputs', help="Can be either single image input or a folder input")
-    parser.add_argument('--model', type = str, default='GRL', help=" 'GRL' || 'RRDB' (for ESRNET & ESRGAN) || 'CUNET' (for Real-ESRGAN) ")
-    parser.add_argument('--scale', type = int, default=4, help="Up scaler factor")
-    parser.add_argument('--weight_path', type = str, default='pretrained/4x_APISR_GRL_GAN_generator.pth', help="Weight path directory, usually under saved_models folder")
-    parser.add_argument('--store_dir', type = str, default='sample_outputs', help="The folder to store the super-resolved images")
-    parser.add_argument('--float16_inference', type = bool, default=False, help="The folder to store the super-resolved images")
+    parser.add_argument('--input_dir', type = str, default = '__assets__/lr_inputs', help="Can be either single image input or a folder input")
+    parser.add_argument('--model', type = str, default = 'GRL', help=" 'GRL' || 'RRDB' (for ESRNET & ESRGAN) || 'CUNET' (for Real-ESRGAN) ")
+    parser.add_argument('--scale', type = int, default = 4, help="Up scaler factor")
+    parser.add_argument('--weight_path', type = str, default = 'pretrained/4x_APISR_GRL_GAN_generator.pth', help="Weight path directory, usually under saved_models folder")
+    parser.add_argument('--store_dir', type = str, default = 'sample_outputs', help="The folder to store the super-resolved images")
+    parser.add_argument('--float16_inference', type = bool, default = False, help="The folder to store the super-resolved images")      # Currently, this is only supported in RRDB, there is some bug with GRL model
     args = parser.parse_args()
     
     # Sample Command
@@ -100,6 +100,7 @@ if __name__ == "__main__":
 
     # Define the weight type
     if float16_inference:
+        torch.backends.cudnn.benchmark = True
         weight_dtype = torch.float16
     else:
         weight_dtype = torch.float32

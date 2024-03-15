@@ -33,7 +33,7 @@ class GANLoss(nn.Module):
         self.real_label_val = real_label_val
         self.fake_label_val = fake_label_val
 
-        # gan type 就是vallina
+        # gan type is vanilla usually
         if gan_type == "vanilla":
             self.loss = nn.BCEWithLogitsLoss()
         elif gan_type == "lsgan":
