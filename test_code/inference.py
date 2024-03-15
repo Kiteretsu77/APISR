@@ -50,7 +50,8 @@ def super_resolve_img(generator, input_path, output_path, weight_dtype, crop_for
     super_resolved_img = generator(img_lr)
 
     # Store the generated result
-    save_image(super_resolved_img, output_path)
+    with torch.cuda.amp.autocast():
+        save_image(super_resolved_img, output_path)
 
     # Empty the cache everytime you finish processing one image
     torch.cuda.empty_cache() 

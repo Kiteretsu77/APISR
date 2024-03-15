@@ -182,7 +182,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--video_folder_dir', type = str, default = '../anime_videos',                  help = "A folder with video sources")
     parser.add_argument('--IC9600_pretrained_weight_path', type = str, default = "pretrained/ck.pth",   help = "The pretrained IC9600 weight")
-    parser.add_argument('--save_dir', type = str, default = 'filtered_dataset',                         help = "The folder to store filtered dataset")
+    parser.add_argument('--save_dir', type = str, default = 'APISR_dataset',                         help = "The folder to store filtered dataset")
     parser.add_argument('--skip_num', type = int, default = 5,                                          help = "Only 1 in skip_num will be chosen in sequential I-frames to accelerate.")
     parser.add_argument('--target_frames', type = list, default = [16, 24],                             help = "[# of frames for video under 30 min, # of frames for video over 30 min]")
     parser.add_argument('--partition_num', type = int, default = 8,                                     help = "The number of partition we want to crop the video to, to increase diversity of sampling")

@@ -531,7 +531,7 @@ class GRL(nn.Module):
             x = self.conv_after_body(self.forward_features(x)) + x
             x = self.upsample(x)
         elif self.upsampler == "nearest+conv":
-            # for real-world SR 他们说这个能够有更少的artifacts
+            # for real-world SR (claimed to have less artifacts)
             x = self.conv_first(x)
             x = self.conv_after_body(self.forward_features(x)) + x
             x = self.conv_before_upsample(x)
@@ -596,7 +596,6 @@ if __name__ == "__main__":
                 conv_type = "1conv",
                 upsampler = "nearest+conv",     # Change
             ).cuda()
-
     
     # Parameter analysis
     num_params = 0
@@ -604,6 +603,11 @@ if __name__ == "__main__":
         if p.requires_grad:
             num_params += p.numel()
     print(f"Number of parameters {num_params / 10 ** 6: 0.2f}")
+    
+    # Print param
+    for name, param in model.named_parameters():
+        print(name, param.dtype)
+        
 
     # Count the number of FLOPs to double check
     x = torch.randn((1, 3, 180, 180)).cuda()        # Don't use input size that is too big (we don't have @torch.no_grad here)
