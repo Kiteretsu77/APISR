@@ -69,9 +69,9 @@ elif opt['architecture'] == "ESRGAN":
     opt['train_batch_size'] = 32             #      
     
     # Learning Rate
-    opt["start_learning_rate"] = 0.0001   # Training Epoch, use the as Real-ESRGAN: 0.0001 - 0.0002 is ok, based on your need
-    opt['decay_iteration'] = 100000       # Fixed decay gap
-    opt['double_milestones'] = []         # Just put this empty
+    opt["start_learning_rate"] = 0.0001     # Training Epoch, use the as Real-ESRGAN: 0.0001 - 0.0002 is ok, based on your need
+    opt['decay_iteration'] = 100000         # Fixed decay gap
+    opt['double_milestones'] = []           # Just put this empty
     
     # Perceptual loss
     opt["danbooru_perceptual_loss_weight"] = 0.5        # ResNet50 Danbooru Perceptual loss weight scale

@@ -53,7 +53,7 @@ APISR aims at restoring and enhancing low-quality low-resolution anime images an
 ## <a name="Update"></a>Update 🔥🔥🔥
 - [x] Release Paper version implementation of APISR 
 - [x] Release different upscaler factor weight (for 2x, 4x and more)
-- [ ] Gradio demo (maybe online)
+- [x] Gradio demo (maybe online)
 
 
 
@@ -82,10 +82,18 @@ sudo apt install ffmpeg
 
 
 
+## <a name="inference"></a> Gradio Fast Inference ⚡⚡⚡
+Gradio option doesn't need to prepare the weight from user side but they can only process one image each time:
+    
+```shell
+python gradio_apisr.py
+```
 
 
-## <a name="inference"></a> Inference ⚡⚡⚡
+## <a name="regular_inference"></a> Regular Inference ⚡⚡
+
 1. Download the model weight from [**model zoo**](docs/model_zoo.md) and **put the weight to "pretrained" folder**.
+
 2. Then, Execute
     ```shell
     python test_code/inference.py --input_dir XXX  --weight_path XXX  --store_dir XXX
@@ -109,15 +117,15 @@ You can collect your own dataset by sending videos into the pipeline and get the
 
 3. Once you get an image dataset with various aspect ratios and resolutions, you can run the following scripts
 
-    Be careful to check **full_patch_source** && **degrade_hr_dataset_path** && **train_hr_dataset_path** (we will use these variables in **opt.py** setting during training stage)
+    Be careful to check **full_patch_source** && **degrade_hr_dataset_path** && **train_hr_dataset_path** (we will use these path in **opt.py** setting during training stage)
+
+    In order to decrease memory utilization and increase training efficiency, we pre-process all time-consuming pseudo-GT (**train_hr_dataset_path**) at the dataset preparation stage. 
+    
+    But in order to create a natural input for prediction-oriented compression, in every epoch, the degradation started from the uncropped GT (**full_patch_source**), and LR synthetic images are concurrently stored. The cropped HR GT dataset (**degrade_hr_dataset_path**) and cropped pseudo-GT (**train_hr_dataset_path**) are fixed in the dataset preparation stage and won't be modified during training.
 
     ```shell
     bash scripts/prepare_datasets.sh
     ```
-
-    In order to decrease memory utilization and increase training efficiency, we pre-process all time-consuming pseudo-GT (**train_hr_dataset_path**) at the dataset preparation stage. 
-    
-    But in order to create a natural input for prediction-oriented compression, in every epoch, the degradation started from the uncropped GT (**full_patch_source**), and LR synthetic images are concurrently stored. The cropped HR GT dataset (**degrade_hr_dataset_path**) is fixed in the dataset preparation stage and won't be modified during training.
     
 
 
@@ -126,7 +134,16 @@ You can collect your own dataset by sending videos into the pipeline and get the
 
 **The whole training process can be done in one RTX3090/4090!**
 
-1. Prepare a dataset (AVC/API) which follows step 2 in [**Dataset Curation**](#dataset_curation)
+1. Prepare a dataset (AVC/API) which follows step 2 & 3 in [**Dataset Curation**](#dataset_curation)
+
+    In total, you will have 3 folders prepared before executing the following commands: 
+
+    --> **full_patch_source**: uncropped GT
+
+    --> **degrade_hr_dataset_path**: cropped GT
+    
+    --> **train_hr_dataset_path**: cropped Pseudo-GT
+
 
 2. Train: Please check **opt.py** carefully to setup parameters you want (modifying **Frequently Changed Setting** is usually enough)
 
@@ -134,15 +151,17 @@ You can collect your own dataset by sending videos into the pipeline and get the
     ```shell
     python train_code/train.py 
     ```
-    The model weights will be inside the folder 'saved_models' (same to checkpoints)
+    The trained model weights will be inside the folder 'saved_models' (same to checkpoints)
 
     **Step2** (GAN **Adversarial** Training): 
-    1. Change opt['architecture'] in **opt.py** to "GRLGAN" and change **batch size** if you need. BTW, I don't think that, for personal training, it is needed to train 300K iter for GAN. I did that in order to follow the same setting as AnimeSR and VQDSR, but **100K ~ 130K** should have a decent visual result.
+    1. Change opt['architecture'] in **opt.py** to "GRLGAN" and change **batch size** if you need. BTW, I don't think that, for personal training, it is needed to train 300K iter for GAN. I did that in order to follow the same setting as in AnimeSR and VQDSR, but **100K ~ 130K** should have a decent visual result.
 
     2. Following previous works, GAN should start from L1 loss pre-trained network, so please carry a **pretrained_path** (the default path below should be fine)
     ```shell
     python train_code/train.py --pretrained_path saved_models/grl_best_generator.pth 
     ```
+
+
 
 ## Related Projects
 1. Fast Anime SR acceleration: https://github.com/Kiteretsu77/FAST_Anime_VSR 

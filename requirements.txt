@@ -12,6 +12,8 @@ pillow==10.0.1
 requests==2.31.0
 pyyaml==6.0.1
 kornia==0.7.0
+gradio
+
 
 # Relatively dynamic library (We think that these libraries may frequently modify their API, so it is better to use the same version as below)
 pyiqa==0.1.7

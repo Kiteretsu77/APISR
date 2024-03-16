@@ -18,7 +18,7 @@ from test_code.test_utils import load_grl, load_rrdb, load_cunet
 
 
 @torch.no_grad      # You must add these time, else it will have Out of Memory
-def super_resolve_img(generator, input_path, output_path, weight_dtype, crop_for_4x = True):
+def super_resolve_img(generator, input_path, output_path=None, weight_dtype=torch.float32, crop_for_4x=True):
     ''' Super Resolve a low resolution image
     Args:
         generator (torch):              the generator class that is already loaded
@@ -51,10 +51,13 @@ def super_resolve_img(generator, input_path, output_path, weight_dtype, crop_for
 
     # Store the generated result
     with torch.cuda.amp.autocast():
-        save_image(super_resolved_img, output_path)
+        if output_path is not None:
+            save_image(super_resolved_img, output_path)
 
     # Empty the cache everytime you finish processing one image
     torch.cuda.empty_cache() 
+    
+    return super_resolved_img
 
 
 
