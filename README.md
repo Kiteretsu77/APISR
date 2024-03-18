@@ -83,8 +83,10 @@ sudo apt install ffmpeg
 
 
 ## <a name="inference"></a> Gradio Fast Inference ⚡⚡⚡
-Gradio option doesn't need to prepare the weight from user side but they can only process one image each time:
-    
+Gradio option doesn't need to prepare the weight from the user side but they can only process one image each time.
+
+An online demo can be found at https://huggingface.co/spaces/HikariDawn/APISR.
+
 ```shell
 python gradio_apisr.py
 ```
