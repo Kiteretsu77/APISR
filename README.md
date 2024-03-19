@@ -5,7 +5,7 @@
 ## APISR: Anime Production Inspired Real-World Anime Super-Resolution (CVPR 2024)
 APISR aims at restoring and enhancing low-quality low-resolution anime images and video sources with various degradations from real-world scenarios. 
  
-[![Arxiv](https://img.shields.io/badge/Arxiv-<COLOR>.svg)](https://arxiv.org/abs/2403.01598) &ensp; [![HF Demo](https://img.shields.io/static/v1?label=Demo&message=HuggingFace&color=orange)](https://huggingface.co/spaces/HikariDawn/APISR)
+[![Arxiv](https://img.shields.io/badge/Arxiv-<COLOR>.svg)](https://arxiv.org/abs/2403.01598) &ensp; [![HF Demo](https://img.shields.io/static/v1?label=Demo&message=HuggingFace&color=orange)](https://huggingface.co/spaces/HikariDawn/APISR)  &ensp; [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/camenduru/APISR-jupyter/blob/main/APISR_jupyter.ipynb)
 
 👀 [**Visualization**](#Visualization)  **|** 🔥 [Update](#Update) **|** 🔧 [Installation](#installation) **|** 🏰 [**Model Zoo**](docs/model_zoo.md) **|** ⚡ [Inference](#inference) **|** 🧩 [Dataset Curation](#dataset_curation) **|** 💻 [Train](#train)
 
@@ -165,11 +165,6 @@ You can collect your own dataset by sending videos into the pipeline and get the
 
 
 
-## Related Projects
-1. Fast Anime SR acceleration: https://github.com/Kiteretsu77/FAST_Anime_VSR 
-2. My previous paper (VCISR - WACV2024) as the baseline method: https://github.com/Kiteretsu77/VCISR-official 
-
-
 ## Citation
 Please cite us if our work is useful for your research.
 ```
@@ -191,4 +186,21 @@ This project is released under the [GPL 3.0 license](LICENSE).
 
 ## Contact
 If you have any questions, please feel free to contact me at hikaridawn412316@gmail.com or boyangwa@umich.edu.
+
+
+## 🧩 Projects that use APISR
+
+If you develop/use APISR in your projects, welcome to let me know. I will write all of them here. Thanks!
+
+- Fast Anime SR acceleration: https://github.com/Kiteretsu77/FAST_Anime_VSR 
+- ComfyUI: https://github.com/ZHO-ZHO-ZHO/ComfyUI-APISR
+- Jupyter Notebook: https://github.com/camenduru/APISR-jupyter
+
+
+
+
+## 🤗 Acknowledgement
+- [VCISR](https://github.com/Kiteretsu77/VCISR-official): My code base is based on my previous paper (WACV 2024).
+- [IC9600](https://github.com/tinglyfeng/IC9600): The dataset curation pipeline used IC9600 code to detect image complexity.
+- [Jupyter Demo](https://github.com/camenduru/APISR-jupyter): The jupter notebook demo is from [camenduru](https://github.com/camenduru).
 
