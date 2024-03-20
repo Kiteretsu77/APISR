@@ -193,7 +193,7 @@ If you have any questions, please feel free to contact me at hikaridawn412316@gm
 If you develop/use APISR in your projects, welcome to let me know. I will write all of them here. Thanks!
 
 - Fast Anime SR acceleration: https://github.com/Kiteretsu77/FAST_Anime_VSR 
-- ComfyUI: https://github.com/ZHO-ZHO-ZHO/ComfyUI-APISR
+- ComfyUI: https://github.com/ZHO-ZHO-ZHO/ComfyUI-APISR and https://github.com/kijai/ComfyUI-APISR
 - Jupyter Notebook: https://github.com/camenduru/APISR-jupyter
 
 
@@ -201,6 +201,6 @@ If you develop/use APISR in your projects, welcome to let me know. I will write 
 
 ## 🤗 Acknowledgement
 - [VCISR](https://github.com/Kiteretsu77/VCISR-official): My code base is based on my previous paper (WACV 2024).
-- [IC9600](https://github.com/tinglyfeng/IC9600): The dataset curation pipeline used IC9600 code to detect image complexity.
+- [IC9600](https://github.com/tinglyfeng/IC9600): The dataset curation pipeline uses IC9600 code to score image complexity level.
 - [Jupyter Demo](https://github.com/camenduru/APISR-jupyter): The jupter notebook demo is from [camenduru](https://github.com/camenduru).
 
