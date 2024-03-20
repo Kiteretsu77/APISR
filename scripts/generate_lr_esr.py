@@ -18,7 +18,6 @@ root_path = os.path.abspath('.')
 sys.path.append(root_path)
 from degradation.ESR.utils import np2tensor
 from degradation.ESR.degradations_functionality import *
-from degradation.ESR.diffjpeg import *
 from degradation.degradation_esr import degradation_v1
 from opt import opt
 os.environ['CUDA_VISIBLE_DEVICES'] = opt['CUDA_VISIBLE_DEVICES']  #'0,1'

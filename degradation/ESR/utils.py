@@ -73,7 +73,6 @@ def generate_kernels(opt):
     # ------------------------ Generate kernels (used in the first degradation) ------------------------ #
     kernel_size = random.choice(kernel_range)
     if np.random.uniform() < opt['sinc_prob']:
-        # 里面加一层sinc filter，但是10%的概率
         # this sinc filter setting is for kernels ranging from [7, 21]
         if kernel_size < 13:
             omega_c = np.random.uniform(np.pi / 3, np.pi)
@@ -90,7 +89,6 @@ def generate_kernels(opt):
             opt['betag_range'],
             opt['betap_range'],
             noise_range=None)
-    # pad kernel: -在v2我是直接省略了padding
     pad_size = (21 - kernel_size) // 2
     kernel = np.pad(kernel, ((pad_size, pad_size), (pad_size, pad_size)))
 
@@ -98,7 +96,6 @@ def generate_kernels(opt):
     # ------------------------ Generate kernels (used in the second degradation) ------------------------ #
     kernel_size = random.choice(kernel_range)
     if np.random.uniform() < opt['sinc_prob2']:
-        # 里面加一层sinc filter，但是10%的概率
         if kernel_size < 13:
             omega_c = np.random.uniform(np.pi / 3, np.pi)
         else:

@@ -15,7 +15,6 @@ import torch.nn.functional as F
 root_path = os.path.abspath('.')
 sys.path.append(root_path)
 from degradation.ESR.degradations_functionality import *
-from degradation.ESR.diffjpeg import *
 from degradation.ESR.utils import filter2D
 from degradation.image_compression.jpeg import JPEG
 from degradation.image_compression.webp import WEBP
@@ -26,8 +25,9 @@ from opt import opt
 
 def PSNR(original, compressed):
     mse = np.mean((original - compressed) ** 2)
-    if(mse == 0):  # MSE is zero means no noise is present in the signal .
-                  # Therefore PSNR have no importance.
+    if(mse == 0):  
+        # MSE is zero means no noise is present in the signal .
+        # Therefore PSNR have no importance.
         return 100
     max_pixel = 255.0
     psnr = 20 * log10(max_pixel / sqrt(mse))
@@ -61,7 +61,6 @@ def downsample_2nd(out, opt, ori_h, ori_w):
         else:
             scale = 1
         mode = random.choice(opt['resize_options'])
-        # Resize这边改回来原来的版本，不用连续的resize了
         # out = F.interpolate(out, scale_factor=scale, mode=mode)
         out = F.interpolate(
             out, size=(int(ori_h / opt['scale'] * scale), int(ori_w / opt['scale'] * scale)), mode=mode
@@ -71,7 +70,7 @@ def downsample_2nd(out, opt, ori_h, ori_w):
 
 
 def common_degradation(out, opt, kernels, process_id, verbose = False):
-    jpeger = DiffJPEG(differentiable=False).cuda()
+
     kernel1, kernel2 = kernels
 
 
@@ -148,7 +147,7 @@ def common_degradation(out, opt, kernels, process_id, verbose = False):
 
     # Add blur 2nd time
     if np.random.uniform() < opt['second_blur_prob']:
-        # 这个bluring不是必定触发的
+        # 2nd blurring is not compulsory 
         if verbose: print("(2nd) blur noise")
         out = filter2D(out, kernel2)
 

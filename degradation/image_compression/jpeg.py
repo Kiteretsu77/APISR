@@ -13,7 +13,6 @@ from degradation.ESR.utils import tensor2np, np2tensor
 class JPEG():
     def __init__(self) -> None:
         # Choose an image compression degradation
-        # self.jpeger = DiffJPEG(differentiable=False).cuda()
         pass
 
     def compress_and_store(self, np_frames, store_path, idx):

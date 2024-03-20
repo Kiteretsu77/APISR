@@ -11,7 +11,7 @@ from opt import opt
 from degradation.ESR.utils import generate_kernels, mass_tensor2np, tensor2np
 from degradation.ESR.degradations_functionality import *
 from degradation.ESR.degradation_esr_shared import common_degradation as regular_common_degradation
-from degradation.image_compression.jpeg import JPEG     #  这里最好后面用一个继承解决一切
+from degradation.image_compression.jpeg import JPEG   
 from degradation.image_compression.webp import WEBP
 from degradation.image_compression.heif import HEIF
 from degradation.image_compression.avif import AVIF
@@ -64,7 +64,6 @@ class degradation_v1:
         # Resize back
         out = F.interpolate(out, size=(ori_h // opt['scale'], ori_w // opt['scale']), mode = resize_mode)
         out = torch.clamp(out, 0, 1)
-        # TODO: 可能Tensor2Numpy会放在之前，而不是在这里，一起转换节约时间
 
         # Tensor2np
         np_frame = tensor2np(out)

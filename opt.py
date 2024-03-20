@@ -24,18 +24,18 @@ os.environ['CUDA_VISIBLE_DEVICES'] = opt['CUDA_VISIBLE_DEVICES']
 ##################################################### Setting for General Training #############################################
 
 # Dataset Setting
-opt["lr_dataset_path"] = "datasets/train_lr"                        # Where you temporally store the LR synthetic images
+opt["lr_dataset_path"] = "datasets/train_lr"    # Where you temporally store the LR synthetic images
 opt['hr_size'] = 256
 
 
 # Loss function
-opt['pixel_loss'] = "L1"                                # Usually it is "L1" 
+opt['pixel_loss'] = "L1"    # Usually it is "L1" 
 
 
 # Adam optimizer setting
 opt["adam_beta1"] = 0.9
 opt["adam_beta2"] = 0.99
-opt['decay_gamma'] = 0.5                                # Decay the learning rate per decay_iteration
+opt['decay_gamma'] = 0.5    # Decay the learning rate per decay_iteration
 
 
 # Miscellaneous Setting
@@ -88,12 +88,12 @@ elif opt['architecture'] == "ESRGAN":
 
 elif opt['architecture'] == "CUNET":
     # Setting for CUNET Training 
-    opt['train_iterations'] = 500000         # Training Iterations (700K for large resolution large dataset overlap training)
+    opt['train_iterations'] = 500000        # Training Iterations (700K for large resolution large dataset overlap training)
     opt['train_batch_size'] = 16          
 
-    opt["start_learning_rate"] = 0.0002      # Training Epoch, use the as Real-ESRGAN: 0.0001 - 0.0002 is ok, based on your need
-    opt['decay_iteration'] = 100000           # Decay iteration  
-    opt['double_milestones'] = []         # Iteration based time you double your learning rate
+    opt["start_learning_rate"] = 0.0002     # Training Epoch, use the as Real-ESRGAN: 0.0001 - 0.0002 is ok, based on your need
+    opt['decay_iteration'] = 100000         # Decay iteration  
+    opt['double_milestones'] = []           # Iteration based time you double your learning rate
 
 
 elif opt['architecture'] == "CUGAN":
@@ -163,7 +163,7 @@ opt["augment_prob"] = 0.5                           # Probability of augmenting 
 
 if opt['architecture'] in ["ESRNET", "ESRGAN", "GRL", "GRLGAN", "CUNET", "CUGAN"]:       
     # Parallel Process
-    opt['parallel_num'] = 8  # Multi-Processing num; Recommend 6
+    opt['parallel_num'] = 8     # Multi-Processing num; Recommend 6~8 based on your CPU
 
     # Blur kernel1
     opt['kernel_range'] = [3, 11]      
@@ -183,8 +183,8 @@ if opt['architecture'] in ["ESRNET", "ESRGAN", "GRL", "GRLGAN", "CUNET", "CUGAN"
     opt['betap_range2'] = [1, 2]        
 
     # The first degradation process
-    opt['resize_prob'] = [0.2, 0.7, 0.1]       
-    opt['resize_range'] = [0.1, 1.2]               # Was [0.15, 1.5] in Real-ESRGAN
+    opt['resize_prob'] = [0.2, 0.7, 0.1]            # [up, down, keep] Resize Probability
+    opt['resize_range'] = [0.1, 1.2]                # Was [0.15, 1.5] in Real-ESRGAN
     opt['gaussian_noise_prob'] = 0.5            
     opt['noise_range'] =  [1, 30]               
     opt['poisson_scale_range'] = [0.05, 3]    
@@ -201,7 +201,7 @@ if opt['architecture'] in ["ESRNET", "ESRGAN", "GRL", "GRLGAN", "CUNET", "CUGAN"
     opt['gray_noise_prob2'] = 0.4           
     
     # Other common settings
-    opt['resize_options'] = ['area', 'bilinear', 'bicubic']     # Should be supported by F.interpolate
+    opt['resize_options'] = ['area', 'bilinear', 'bicubic']         # Should be supported by F.interpolate
 
 
     # First image compression
@@ -209,13 +209,13 @@ if opt['architecture'] in ["ESRNET", "ESRGAN", "GRL", "GRLGAN", "CUNET", "CUGAN"
     opt['compression_codec_prob1'] = [0.4, 0.6, 0.0, 0.0] 
 
     # Specific Setting
-    opt["jpeg_quality_range1"] = [20, 95]
+    opt["jpeg_quality_range1"] = [20, 95]       # Harder JPEG compression setting
     opt["webp_quality_range1"] = [20, 95]
     opt["webp_encode_speed1"] = [0, 6]
     opt["heif_quality_range1"] = [30, 100]
-    opt["heif_encode_speed1"] = [0, 6]       # Useless now
+    opt["heif_encode_speed1"] = [0, 6]          # Useless now
     opt["avif_quality_range1"] = [30, 100]
-    opt["avif_encode_speed1"] = [0, 6]       # Useless now
+    opt["avif_encode_speed1"] = [0, 6]          # Useless now
 
     
     ######################################## Setting for Degradation with Intra-Prediction ########################################
@@ -223,13 +223,13 @@ if opt['architecture'] in ["ESRNET", "ESRGAN", "GRL", "GRLGAN", "CUNET", "CUGAN"
     opt['compression_codec_prob2'] = [0.06, 0.1, 0.1, 0.12, 0.12, 0.3, 0.2] 
 
     # Image compression setting
-    opt["jpeg_quality_range2"] = [20, 95]
+    opt["jpeg_quality_range2"] = [20, 95]       # Harder JPEG compression setting
 
     opt["webp_quality_range2"] = [20, 95]
     opt["webp_encode_speed2"] = [0, 6]
 
     opt["avif_quality_range2"] = [20, 95]
-    opt["avif_encode_speed2"] = [0, 6]       # Useless now
+    opt["avif_encode_speed2"] = [0, 6]          # Useless now
 
     # Video compression I-Frame setting
     opt['h264_crf_range2'] = [23, 38]

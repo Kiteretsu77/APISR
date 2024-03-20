@@ -309,7 +309,6 @@ def random_bivariate_plateau(kernel_size,
         sigma_y = sigma_x
         rotation = 0
 
-    # TODO: this may be not proper
     if np.random.uniform() < 0.5:
         beta = np.random.uniform(beta_range[0], 1)
     else:
@@ -393,7 +392,6 @@ np.seterr(divide='ignore', invalid='ignore')
 
 def circular_lowpass_kernel(cutoff, kernel_size, pad_to=0):
     """2D sinc filter, ref: https://dsp.stackexchange.com/questions/58301/2-d-circularly-symmetric-low-pass-filter
-    =====》 这个地方好好调研一下，能做出来的效果决定了后面的上线！
     Args:
         cutoff (float): cutoff frequency in radians (pi is max)
         kernel_size (int): horizontal and vertical size, must be odd.
@@ -464,9 +462,9 @@ def generate_gaussian_noise_pt(img, sigma=10, gray_noise=0):
     """Add Gaussian noise (PyTorch version).
 
     Args:
-        img (Tensor): Shape (b, c, h, w), range[0, 1], float32.
-        sigma (float | Tensor): 每一个batch都被分配了一个(share 一个)
-        gray_noise (float | Tensor): 不是1就是0
+        img (Tensor):                   Shape (b, c, h, w), range[0, 1], float32.
+        sigma (float | Tensor):         sigma value setting
+        gray_noise (float | Tensor):    0/1 
 
     Returns:
         (Tensor): Returned noisy image, shape (b, c, h, w), range[0, 1],
@@ -504,7 +502,7 @@ def add_gaussian_noise_pt(img, sigma=10, gray_noise=0, clip=True, rounds=False):
         (Tensor): Returned noisy image, shape (b, c, h, w), range[0, 1],
             float32.
     """
-    noise = generate_gaussian_noise_pt(img, sigma, gray_noise) # sigma 就是gray_noise的保存率
+    noise = generate_gaussian_noise_pt(img, sigma, gray_noise)
     out = img + noise
     if clip and rounds:
         out = torch.clamp((out * 255.0).round(), 0, 255) / 255.
@@ -546,7 +544,6 @@ def random_generate_gaussian_noise_pt(img, sigma_range=(0, 10), gray_prob=0):
 
 
 def random_add_gaussian_noise_pt(img, sigma_range=(0, 1.0), gray_prob=0, clip=True, rounds=False):
-    # sigma_range 就是noise保存比例
     noise = random_generate_gaussian_noise_pt(img, sigma_range, gray_prob)
     out = img + noise
     if clip and rounds:
@@ -618,10 +615,8 @@ def generate_poisson_noise_pt(img, scale=1.0, gray_noise=0):
         img (Tensor): Input image, shape (b, c, h, w), range [0, 1], float32.
         scale (float | Tensor): Noise scale. Number or Tensor with shape (b).
             Default: 1.0.
-            可以是个batch形式(Tensor)
         gray_noise (float | Tensor): 0-1 number or Tensor with shape (b).
             0 for False, 1 for True. Default: 0.
-            可以是个batch形式(Tensor)
 
     Returns:
         (Tensor): Returned noisy image, shape (b, c, h, w), range[0, 1],
@@ -632,22 +627,18 @@ def generate_poisson_noise_pt(img, scale=1.0, gray_noise=0):
         cal_gray_noise = gray_noise > 0
     else:
         gray_noise = gray_noise.view(b, 1, 1, 1)
-        # 这下面跟原论文有点小不一样的地方，如果按照我现在128 batch size，基本上每个都会有gray noise
         cal_gray_noise = torch.sum(gray_noise) > 0
     if cal_gray_noise:
-        # 这里实际上我是觉得写的不是很efficient，因为有些地方如果不加那不是完全白计算了吗，现在gray noise的概率低得很
-        img_gray = rgb_to_grayscale(img, num_output_channels=1) # 返回的只有luminance这一个channel
+        img_gray = rgb_to_grayscale(img, num_output_channels=1)
         # round and clip image for counting vals correctly, ensure that it only has 256 possible floats at the end
         img_gray = torch.clamp((img_gray * 255.0).round(), 0, 255) / 255.
         # use for-loop to get the unique values for each sample
 
-        # Note: 这里加上noise完全看的是本图片（一张）的颜色diversity，这应该就解释了为什么在比较单一的flat图像，他会noise更加明显
         vals_list = [len(torch.unique(img_gray[i, :, :, :])) for i in range(b)]
         vals_list = [2**np.ceil(np.log2(vals)) for vals in vals_list]
         vals = img_gray.new_tensor(vals_list).view(b, 1, 1, 1)
 
         # Since the img is in range [0,1], the noise by possion distribution should also lies in [0,1]
-        # Note: 这只是我个人的理解，现在对于单调的图片，整体会比较集中poisson noise在一个高点，就不如unique值高的图片会广泛分布(看possison distribution的图都看的出来)
         out = torch.poisson(img_gray * vals) / vals
         noise_gray = out - img_gray
         noise_gray = noise_gray.expand(b, 3, h, w)
@@ -659,17 +650,13 @@ def generate_poisson_noise_pt(img, scale=1.0, gray_noise=0):
     vals_list = [len(torch.unique(img[i, :, :, :])) for i in range(b)]
     vals_list = [2**np.ceil(np.log2(vals)) for vals in vals_list]
     vals = img.new_tensor(vals_list).view(b, 1, 1, 1)
-    out = torch.poisson(img * vals) / vals   # output还是正数
-    noise = out - img   # 这个会导致负值的产生
+    out = torch.poisson(img * vals) / vals   
+    noise = out - img   
     if cal_gray_noise:
-        # Note: 这里noise要么全加，要么不加（换成gray_noise）
         noise = noise * (1 - gray_noise) + noise_gray * gray_noise          # In this place, I don't know why it sometimes run out of memory
     if not isinstance(scale, (float, int)):
         scale = scale.view(b, 1, 1, 1)
 
-    # Note: noise这边产出的值都是-0.x ---- +0.x 这个范围: 负的值相当于减弱pixel值的效果
-    # print("poisson noise range is ", sorted(torch.unique(noise))[:10])
-    # print(sorted(torch.unique(noise))[-10:])
     return noise * scale
 
 
@@ -723,13 +710,11 @@ def random_add_poisson_noise(img, scale_range=(0, 1.0), gray_prob=0, clip=True, 
 
 
 def random_generate_poisson_noise_pt(img, scale_range=(0, 1.0), gray_prob=0):
-    # scale_range 还是保存的大小
-    # img.size(0) 代表就是batch中的每个图片都有一个自己的scale level
     scale = torch.rand(img.size(0), dtype=img.dtype, device=img.device) * (scale_range[1] - scale_range[0]) + scale_range[0]
 
     gray_noise = torch.rand(img.size(0), dtype=img.dtype, device=img.device)
     gray_noise = (gray_noise < gray_prob).float()
-    return generate_poisson_noise_pt(img, scale, gray_noise) # scale 和 gray_noise应该都是tensor的batch形式
+    return generate_poisson_noise_pt(img, scale, gray_noise)
 
 
 def random_add_poisson_noise_pt(img, scale_range=(0, 1.0), gray_prob=0, clip=True, rounds=False):
