@@ -53,7 +53,9 @@ APISR aims at restoring and enhancing low-quality low-resolution anime images an
 ## <a name="Update"></a>Update 🔥🔥🔥
 - [x] Release Paper version implementation of APISR 
 - [x] Release different upscaler factor weight (for 2x, 4x and more)
-- [x] Gradio demo (maybe online)
+- [x] Gradio demo (with online)
+- [ ] Provide weight with different architecture
+- [ ] Create a Project Page
 
 
 
@@ -85,8 +87,9 @@ sudo apt install ffmpeg
 ## <a name="inference"></a> Gradio Fast Inference ⚡⚡⚡
 Gradio option doesn't need to prepare the weight from the user side but they can only process one image each time.
 
-An online demo can be found at https://huggingface.co/spaces/HikariDawn/APISR.
+Online demo can be found at https://huggingface.co/spaces/HikariDawn/APISR (HuggingFace) or https://colab.research.google.com/github/camenduru/APISR-jupyter/blob/main/APISR_jupyter.ipynb (Colab)
 
+Local Gradio can be created by running the following:
 ```shell
 python gradio_apisr.py
 ```
@@ -125,6 +128,7 @@ You can collect your own dataset by sending videos into the pipeline and get the
     
     But in order to create a natural input for prediction-oriented compression, in every epoch, the degradation started from the uncropped GT (**full_patch_source**), and LR synthetic images are concurrently stored. The cropped HR GT dataset (**degrade_hr_dataset_path**) and cropped pseudo-GT (**train_hr_dataset_path**) are fixed in the dataset preparation stage and won't be modified during training.
 
+    Be careful to check if there is any OOM. If there is, it will be impossible to get correct dataset preparation. Usually, this is because **num_workers** in **scripts/anime_strong_usm.py** is too big!
     ```shell
     bash scripts/prepare_datasets.sh
     ```

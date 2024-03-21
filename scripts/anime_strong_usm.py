@@ -342,17 +342,17 @@ if __name__ == "__main__":
     parser.add_argument('-i', '--input_dir', type = str)
     parser.add_argument('-o', '--store_dir', type = str)
     parser.add_argument('--outlier_threshold', type = int, default=32)
-    args  = parser.parse_args()
+    parser.add_argument('--num_workers', type = int, default=6)
+    args = parser.parse_args()
 
     input_dir = args.input_dir
     store_dir = args.store_dir
     outlier_threshold = args.outlier_threshold
-
+    num_workers = args.num_workers
 
     print("We are handling Strong USM sharpening on hand-drawn line for Anime images!")
 
 
-    num_workers = 8
     extra_sharpen_time = 2
 
 
