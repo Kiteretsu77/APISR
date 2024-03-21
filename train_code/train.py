@@ -72,24 +72,34 @@ def process(options):
     start = time.time()
 
     # Switch based on the model architecture
-    if options['architecture'] == "ESRNET":
-        from train_esrnet import train_esrnet
-        obj = train_esrnet(options, args)
-    elif options['architecture'] == "ESRGAN":
-        from train_esrgan import train_esrgan
-        obj = train_esrgan(options, args)
-    elif options['architecture'] == "GRL":
+    if options['architecture'] == "GRL":
         from train_grl import train_grl
         obj = train_grl(options, args)
     elif options['architecture'] == "GRLGAN":
         from train_grlgan import train_grlgan
         obj = train_grlgan(options, args)
+
+    elif options['architecture'] == "ESRNET":
+        from train_esrnet import train_esrnet
+        obj = train_esrnet(options, args)
+    elif options['architecture'] == "ESRGAN":
+        from train_esrgan import train_esrgan
+        obj = train_esrgan(options, args)
+
+    elif options['architecture'] == "DAT":
+        from train_dat import train_dat
+        obj = train_dat(options, args)
+    elif options['architecture'] == "DATGAN":
+        from train_datgan import train_datgan
+        obj = train_datgan(options, args)
+
     elif options['architecture'] == "CUNET":
         from train_cunet import train_cunet
         obj = train_cunet(options, args)
     elif options['architecture'] == "CUGAN":
         from train_cugan import train_cugan
         obj = train_cugan(options, args)
+        
     else:
         raise NotImplementedError("This is not a supported model architecture")
 
