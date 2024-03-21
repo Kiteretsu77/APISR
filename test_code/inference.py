@@ -141,7 +141,7 @@ if __name__ == "__main__":
     if os.path.isdir(store_dir):    # If the input is a directory, we will iterate it
         for filename in sorted(os.listdir(input_dir)):
             input_path = os.path.join(input_dir, filename)
-            output_path = os.path.join(store_dir, filename)
+            output_path = os.path.join(store_dir, "".join(filename.split('.')[:-1])+".png")
             # In default, we will automatically use crop to match 4x size
             super_resolve_img(generator, input_path, output_path, weight_dtype, downsample_threshold, crop_for_4x=True)
             
