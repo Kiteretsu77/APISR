@@ -151,15 +151,20 @@ You can collect your own dataset by sending videos into the pipeline and get the
     --> **train_hr_dataset_path**: cropped Pseudo-GT
 
 
-2. Train: Please check **opt.py** carefully to setup parameters you want (modifying **Frequently Changed Setting** is usually enough)
+2. Train: Please check **opt.py** carefully to set the hyperparameters you want (modifying **Frequently Changed Setting** is usually enough).
+  
+   When you execute the following, we will create a "**tmp**" folder to hold generated lr images for sanity check. You can modify the code to delete it if you want.
+
 
     **Step1** (Net **L1** loss training): Run 
     ```shell
     python train_code/train.py 
     ```
-    The trained model weights will be inside the folder 'saved_models' (same to checkpoints)
+    The trained model weights will be inside the folder 'saved_models' (same as checkpoints)
 
-    **Step2** (GAN **Adversarial** Training): 
+
+    **Step2** (GAN **Adversarial** Training):
+   
     1. Change opt['architecture'] in **opt.py** to "GRLGAN" and change **batch size** if you need. BTW, I don't think that, for personal training, it is needed to train 300K iter for GAN. I did that in order to follow the same setting as in AnimeSR and VQDSR, but **100K ~ 130K** should have a decent visual result.
 
     2. Following previous works, GAN should start from L1 loss pre-trained network, so please carry a **pretrained_path** (the default path below should be fine)
