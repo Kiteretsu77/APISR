@@ -17,6 +17,7 @@ tmp/*
 *.pth
 *.png
 *.jpg
+*.jpeg
 *.mp4
 *.txt
 *.json

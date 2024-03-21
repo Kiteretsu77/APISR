@@ -108,6 +108,7 @@ if __name__ == '__main__':
                     ["__assets__/lr_inputs/image-00440.png"],
                     ["__assets__/lr_inputs/image-00164.png"],
                     ["__assets__/lr_inputs/img_eva.jpeg"],
+                    ["__assets__/lr_inputs/naruto.jpg"],
                 ],
                 [input_image],
             )
