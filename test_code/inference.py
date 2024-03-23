@@ -39,7 +39,7 @@ def super_resolve_img(generator, input_path, output_path=None, weight_dtype=torc
     short_side = min(h, w)
     if downsample_threshold != -1 and short_side > downsample_threshold:
         resize_ratio = short_side / downsample_threshold
-        img_lr = cv2.resize(img_lr, (int(h*resize_ratio), int(w*resize_ratio)), interpolation = cv2.INTER_LINEAR)
+        img_lr = cv2.resize(img_lr, (int(w/resize_ratio), int(h/resize_ratio)), interpolation = cv2.INTER_LINEAR)
 
 
     # Crop if needed
