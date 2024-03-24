@@ -24,4 +24,4 @@ My main target will be **2x** and **4x**. The network structure will be chosen f
 | Models                                                                                                                          | Scale | Description                                  |
 | ------------------------------------------------------------------------------------------------------------------------------- | :---- | :------------------------------------------- |
 | [2x_APISR_RRDB_GAN_generator](https://github.com/Kiteretsu77/APISR/releases/download/v0.1.0/2x_APISR_RRDB_GAN_generator.pth)    | 2X    | 2X upscaler by RRDB-6blocks                  |
-| [4x_APISR_RRDB_GAN_generator](https://github.com/Kiteretsu77/APISR/releases/download/v0.2.0/4x_APISR_RRDB_GAN_generator.pth)    | 4X    | 4X upscaler by RRDB-6blocks                  |
+| [4x_APISR_RRDB_GAN_generator](https://github.com/Kiteretsu77/APISR/releases/download/v0.2.0/4x_APISR_RRDB_GAN_generator.pth)    | 4X    | 4X upscaler by RRDB-6blocks (Probably needs to tune twin perceptual loss hyperparameter to decrease unwanted color artifacts)                 |
