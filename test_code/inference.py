@@ -2,6 +2,7 @@
     This is file is to execute the inference for a single image or a folder input
 '''
 import argparse
+import time
 import os, sys, cv2, shutil, warnings
 import torch
 from torchvision.transforms import ToTensor
@@ -76,6 +77,7 @@ if __name__ == "__main__":
     
     # Sample Command
     # 4x GRL (Default):     python test_code/inference.py --model GRL --scale 4 --weight_path pretrained/4x_APISR_GRL_GAN_generator.pth
+    # 4x RRDB:              python test_code/inference.py --model RRDB --scale 4 --weight_path pretrained/4x_APISR_RRDB_GAN_generator.pth
     # 2x RRDB:              python test_code/inference.py --model RRDB --scale 2 --weight_path pretrained/2x_APISR_RRDB_GAN_generator.pth
 
 
@@ -116,8 +118,9 @@ if __name__ == "__main__":
     elif model == "RRDB":
         generator = load_rrdb(weight_path, scale=scale)  # Can be any size
     generator = generator.to(dtype=weight_dtype)
-    
 
+
+    start = time.time()
     # Take the input path and do inference
     if os.path.isdir(store_dir):    # If the input is a directory, we will iterate it
         for filename in sorted(os.listdir(input_dir)):
@@ -131,7 +134,9 @@ if __name__ == "__main__":
         output_path = os.path.join(store_dir, filename+"_"+str(scale)+"x.png")
         # In default, we will automatically use crop to match 4x size
         super_resolve_img(generator, input_dir, output_path, weight_dtype, crop_for_4x=True)
-
+    end = time.time()
+    
+    print("Total inference time spent is ", end-start)
     
 
 
