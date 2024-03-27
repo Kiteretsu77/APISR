@@ -4,7 +4,7 @@ import os
 
 opt = {}
 ##################################################### Frequently Changed Setting ###########################################################
-opt['description'] = "4x_DAT_paper"        # Description to add to the log  
+opt['description'] = "4x_DAT_small"        # Description to add to the log  
 
 opt['architecture'] = "DAT"                # "ESRNET" || "ESRGAN" || "GRL" || "GRLGAN" (GRL only support 4x) || "DAT" || "DATGAN"
 
@@ -126,14 +126,14 @@ elif opt['architecture'] == "ESRGAN":
 
 elif opt['architecture'] == "DAT":           # L1 loss training version
     # Setting for DAT Training 
-    opt['model_size'] = "light"              # "tiny2" in default
+    opt['model_size'] = "small"              # "light" || "small"
     
-    opt['train_iterations'] = 300000         # Training Iterations
-    opt['train_batch_size'] = 32             # 4x: 32 (256x256); 2x:  4?  
+    opt['train_iterations'] = 500000         # Training Iterations
+    opt['train_batch_size'] = 12             # For 4x, light can have 32 batch size; small can have    batch size
     
     # Learning Rate
     opt["start_learning_rate"] = 0.0002      # Training Epoch, use the as Real-ESRGAN: 0.0001 - 0.0002 is ok, based on your need
-    opt['decay_iteration'] = 100000          # Decay iteration  
+    opt['decay_iteration'] = 140000          # Decay iteration  
     opt['double_milestones'] = []            # Iteration based time you double your learning rate (Just ignore this one)
 
 elif opt['architecture'] == "DATGAN":         # L1 + Preceptual + Discriminator Loss version
