@@ -4,11 +4,9 @@ import torch
 # Import files from same folder
 root_path = os.path.abspath('.')
 sys.path.append(root_path)
-from opt import opt
 from architecture.rrdb import RRDBNet
 from architecture.grl import GRL
 from architecture.dat import DAT
-from architecture.swinir import SwinIR
 from architecture.cunet import UNet_Full
 
 
