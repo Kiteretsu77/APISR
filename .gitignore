@@ -24,6 +24,7 @@ tmp/*
 *.zip
 *.mp4
 *.csv
+*.webp
 
 !__assets__/lr_inputs/*
 !__assets__/*
