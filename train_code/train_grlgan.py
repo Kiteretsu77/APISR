@@ -116,9 +116,12 @@ class train_grlgan(train_master):
 
 
         # Generator perceptual loss:        generated vs. perceptual
-        l_g_percep_danbooru = self.cri_danbooru_perceptual(gen_hr, imgs_hr)
         l_g_percep_vgg = self.cri_vgg_perceptual(gen_hr, imgs_hr)
-        l_g_percep = l_g_percep_danbooru + l_g_percep_vgg 
+        l_g_percep = l_g_percep_vgg 
+        # For the optional Anime Perceputla Loss
+        if self.options["danbooru_perceptual_loss_weight"] != 0.0:
+            l_g_percep_danbooru = self.cri_danbooru_perceptual(gen_hr, imgs_hr)
+            l_g_percep += l_g_percep_danbooru
         self.generator_loss += l_g_percep
         self.weight_store["perceptual_loss"] = l_g_percep
 
