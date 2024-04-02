@@ -214,4 +214,5 @@ If you develop/use APISR in your projects, welcome to let me know. I will write 
 - [IC9600](https://github.com/tinglyfeng/IC9600): The dataset curation pipeline uses IC9600 code to score image complexity level.
 - [danbooru-pretrained](https://github.com/RF5/danbooru-pretrained): Our Anime Dataset (Danbooru) pretrained RESNET50 model.
 - [Jupyter Demo](https://github.com/camenduru/APISR-jupyter): The jupter notebook demo is from [camenduru](https://github.com/camenduru).
+- [AVIF&HEIF](https://github.com/bigcat88/pillow_heif): The degradation of AVIF and HEFI is from pillow_heif.
 
