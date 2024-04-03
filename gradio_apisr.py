@@ -14,7 +14,7 @@ from torchvision.utils import save_image
 root_path = os.path.abspath('.')
 sys.path.append(root_path)
 from test_code.inference import super_resolve_img
-from test_code.test_utils import load_grl, load_rrdb
+from test_code.test_utils import load_grl, load_rrdb, load_dat
 
 
 def auto_download_if_needed(weight_path):
@@ -35,7 +35,10 @@ def auto_download_if_needed(weight_path):
     if weight_path == "pretrained/2x_APISR_RRDB_GAN_generator.pth":
         os.system("wget https://github.com/Kiteretsu77/APISR/releases/download/v0.1.0/2x_APISR_RRDB_GAN_generator.pth")
         os.system("mv 2x_APISR_RRDB_GAN_generator.pth pretrained")
-
+    
+    if weight_path == "pretrained/4x_APISR_DAT_GAN_generator.pth":
+        os.system("wget https://github.com/Kiteretsu77/APISR/releases/download/v0.3.0/4x_APISR_DAT_GAN_generator.pth")
+        os.system("mv 4x_APISR_DAT_GAN_generator.pth pretrained")
     
 
 
@@ -59,6 +62,11 @@ def inference(img_path, model_name):
             weight_path = "pretrained/2x_APISR_RRDB_GAN_generator.pth"
             auto_download_if_needed(weight_path)
             generator = load_rrdb(weight_path, scale=2) # Directly use default way now
+            
+        elif model_name == "4xDAT":
+            weight_path = "pretrained/4x_APISR_DAT_GAN_generator.pth"
+            auto_download_if_needed(weight_path)
+            generator = load_dat(weight_path, scale=4) # Directly use default way now
             
         else:
             raise gr.Error("We don't support such Model")
@@ -108,7 +116,8 @@ if __name__ == '__main__':
                     [
                         "2xRRDB",
                         "4xRRDB",
-                        "4xGRL"
+                        "4xGRL",
+                        "4xDAT",
                     ],
                     type="value",
                     value="4xGRL",

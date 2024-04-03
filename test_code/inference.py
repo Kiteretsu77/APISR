@@ -14,24 +14,35 @@ os.environ["PYTHONWARNINGS"] = "default"
 # Import files from the local folder
 root_path = os.path.abspath('.')
 sys.path.append(root_path)
-from test_code.test_utils import load_grl, load_rrdb, load_cunet
+from test_code.test_utils import load_grl, load_rrdb, load_dat, load_cunet
 
 
 
 @torch.no_grad      # You must add these time, else it will have Out of Memory
-def super_resolve_img(generator, input_path, output_path=None, weight_dtype=torch.float32, crop_for_4x=True):
+def super_resolve_img(generator, input_path, output_path=None, weight_dtype=torch.float32, downsample_threshold=-1, crop_for_4x=True):
     ''' Super Resolve a low resolution image
     Args:
         generator (torch):              the generator class that is already loaded
         input_path (str):               the path to the input lr images
         output_path (str):              the directory to store the generated images
         weight_dtype (bool):            the weight type (float32/float16)
+        downsample_threshold (int):     the threshold of height/width (short side) to downsample the input
         crop_for_4x (bool):             whether we crop the lr images to match 4x scale (needed for some situation)
     '''
     print("Processing image {}".format(input_path))
     
     # Read the image and do preprocess
     img_lr = cv2.imread(input_path)
+    h, w, c = img_lr.shape
+
+
+    # Downsample if needed
+    short_side = min(h, w)
+    if downsample_threshold != -1 and short_side > downsample_threshold:
+        resize_ratio = short_side / downsample_threshold
+        img_lr = cv2.resize(img_lr, (int(w/resize_ratio), int(h/resize_ratio)), interpolation = cv2.INTER_LINEAR)
+
+
     # Crop if needed
     if crop_for_4x:
         h, w, _ = img_lr.shape
@@ -39,6 +50,7 @@ def super_resolve_img(generator, input_path, output_path=None, weight_dtype=torc
             img_lr = img_lr[:4*(h//4),:,:]
         if w % 4 != 0:
             img_lr = img_lr[:,:4*(w//4),:]
+
 
     # Transform to tensor
     img_lr = cv2.cvtColor(img_lr, cv2.COLOR_BGR2RGB)
@@ -68,17 +80,21 @@ if __name__ == "__main__":
     # Fundamental setting
     parser = argparse.ArgumentParser()
     parser.add_argument('--input_dir', type = str, default = '__assets__/lr_inputs', help="Can be either single image input or a folder input")
-    parser.add_argument('--model', type = str, default = 'GRL', help=" 'GRL' || 'RRDB' (for ESRNET & ESRGAN) || 'CUNET' (for Real-ESRGAN) ")
     parser.add_argument('--scale', type = int, default = 4, help="Upscaler factor")
-    parser.add_argument('--weight_path', type = str, default = 'pretrained/4x_APISR_GRL_GAN_generator.pth', help="Weight path directory, usually under saved_models folder")
     parser.add_argument('--store_dir', type = str, default = 'sample_outputs', help="The folder to store the super-resolved images")
+    parser.add_argument('--model', type = str, default = 'GRL', help=" 'GRL' || 'RRDB' (for ESRNET & ESRGAN) || 'DAT' || 'CUNET' (for Real-ESRGAN) ")
+    parser.add_argument('--weight_path', type = str, default = 'pretrained/4x_APISR_GRL_GAN_generator.pth', help="Weight path directory, usually under saved_models folder")
+    parser.add_argument('--downsample_threshold', type = int, default = -1, help="Downsample with same aspect ratio if the height/width (short side) is over the threshold limit, recommend to set as 720")
     parser.add_argument('--float16_inference', type = bool, default = False, help="The folder to store the super-resolved images")      # Currently, this is only supported in RRDB, there is some bug with GRL model
     args = parser.parse_args()
     
-    # Sample Command
-    # 4x GRL (Default):     python test_code/inference.py --model GRL --scale 4 --weight_path pretrained/4x_APISR_GRL_GAN_generator.pth
-    # 4x RRDB:              python test_code/inference.py --model RRDB --scale 4 --weight_path pretrained/4x_APISR_RRDB_GAN_generator.pth
-    # 2x RRDB:              python test_code/inference.py --model RRDB --scale 2 --weight_path pretrained/2x_APISR_RRDB_GAN_generator.pth
+
+    # Sample Command:
+    # 4x GRL (Default):     python test_code/inference.py --model GRL --scale 4 --downsample_threshold 1080 --weight_path pretrained/4x_APISR_GRL_GAN_generator.pth
+    # 4X DAT:               python test_code/inference.py --model DAT --scale 4 --downsample_threshold 720 --weight_path pretrained/4x_APISR_DAT_GAN_generator.pth
+    # 4x RRDB:              python test_code/inference.py --model RRDB --scale 4 --downsample_threshold 1080 --weight_path pretrained/4x_APISR_RRDB_GAN_generator.pth
+    # 2x RRDB:              python test_code/inference.py --model RRDB --scale 2 --downsample_threshold 1080 --weight_path pretrained/2x_APISR_RRDB_GAN_generator.pth
+    
 
 
     # Read argument and prepare the folder needed
@@ -87,6 +103,7 @@ if __name__ == "__main__":
     weight_path = args.weight_path
     store_dir = args.store_dir
     scale = args.scale
+    downsample_threshold = args.downsample_threshold
     float16_inference = args.float16_inference
     
     
@@ -115,9 +132,15 @@ if __name__ == "__main__":
     # Load the model
     if model == "GRL":
         generator = load_grl(weight_path, scale=scale)  # GRL for Real-World SR only support 4x upscaling
+
+    elif model == "DAT":
+        generator = load_dat(weight_path, scale=scale)  # GRL for Real-World SR only support 4x upscaling
+
     elif model == "RRDB":
         generator = load_rrdb(weight_path, scale=scale)  # Can be any size
+        
     generator = generator.to(dtype=weight_dtype)
+
 
 
     start = time.time()
@@ -127,16 +150,17 @@ if __name__ == "__main__":
             input_path = os.path.join(input_dir, filename)
             output_path = os.path.join(store_dir, "".join(filename.split('.')[:-1])+".png")
             # In default, we will automatically use crop to match 4x size
-            super_resolve_img(generator, input_path, output_path, weight_dtype, crop_for_4x=True)
+            super_resolve_img(generator, input_path, output_path, weight_dtype, downsample_threshold, crop_for_4x=True)
             
     else:   # If the input is a single image, we will process it directly and write on the same folder
         filename = os.path.split(input_dir)[-1].split('.')[0]
         output_path = os.path.join(store_dir, filename+"_"+str(scale)+"x.png")
         # In default, we will automatically use crop to match 4x size
-        super_resolve_img(generator, input_dir, output_path, weight_dtype, crop_for_4x=True)
+        super_resolve_img(generator, input_dir, output_path, weight_dtype, downsample_threshold, crop_for_4x=True)
+        
     end = time.time()
-    
     print("Total inference time spent is ", end-start)
+
     
 
 

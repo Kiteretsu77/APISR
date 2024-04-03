@@ -6,6 +6,7 @@ root_path = os.path.abspath('.')
 sys.path.append(root_path)
 from architecture.rrdb import RRDBNet
 from architecture.grl import GRL
+from architecture.dat import DAT
 from architecture.cunet import UNet_Full
 
 
@@ -121,6 +122,7 @@ def load_cunet(generator_weight_PATH, scale, print_options=False):
 
     return generator
 
+
 def load_grl(generator_weight_PATH, scale=4):
     ''' A simpler API to load GRL model
     Args:
@@ -154,6 +156,48 @@ def load_grl(generator_weight_PATH, scale=4):
             conv_type = "1conv",
             upsampler = "nearest+conv",     # Change
         ).cuda()
+
+    else:
+        print("This weight is not supported")
+        os._exit(0)
+
+
+    generator.load_state_dict(weight)
+    generator = generator.eval().cuda()
+
+
+    num_params = 0
+    for p in generator.parameters():
+        if p.requires_grad:
+            num_params += p.numel()
+    print(f"Number of parameters {num_params / 10 ** 6: 0.2f}")
+
+
+    return generator
+
+
+def load_dat(generator_weight_PATH, scale=4):
+
+    # Load the checkpoint
+    checkpoint_g = torch.load(generator_weight_PATH)
+
+     # Find the generator weight
+    if 'model_state_dict' in checkpoint_g:
+        weight = checkpoint_g['model_state_dict']
+
+        # DAT small model in default
+        generator = DAT(upscale = 4,
+                        in_chans = 3,
+                        img_size = 64,
+                        img_range = 1.,
+                        depth = [6, 6, 6, 6, 6, 6],
+                        embed_dim = 180,
+                        num_heads = [6, 6, 6, 6, 6, 6],
+                        expansion_factor = 2,
+                        resi_connection = '1conv',
+                        split_size = [8, 16],
+                        upsampler = 'pixelshuffledirect',
+                        ).cuda()
 
     else:
         print("This weight is not supported")

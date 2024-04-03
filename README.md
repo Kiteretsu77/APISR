@@ -95,6 +95,8 @@ Local Gradio can be created by running the following:
 python gradio_apisr.py
 ```
 
+**Note:** Gradio is designed for fast inference, so we will automatically download existing weights and downsample to 720P to ease the VRAM consumption. For a full grounder inference, please check the regular inference section below.
+
 
 ## <a name="regular_inference"></a> Regular Inference ⚡⚡
 
@@ -153,10 +155,12 @@ You can collect your own dataset by sending videos into the pipeline and get the
 
 
 2. Train: Please check **opt.py** carefully to set the hyperparameters you want (modifying **Frequently Changed Setting** is usually enough).
-  
-   When you execute the following, we will create a "**tmp**" folder to hold generated lr images for sanity check. You can modify the code to delete it if you want.
 
+    **Note1**: When you execute the following, we will create a "**tmp**" folder to hold generated lr images for sanity check. You can modify the code to delete it if you want.
 
+    **Note2**: If you have a strong CPU, and if you want to accelerate, you can increase **parallel_num** in the **opt.py**.
+ 
+ 
     **Step1** (Net **L1** loss training): Run 
     ```shell
     python train_code/train.py 
