@@ -88,9 +88,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     # Sample Command:
-    # 4X DAT:               python test_code/inference.py --model DAT --scale 4 --downsample_threshold 1080 --weight_path saved_models/dat_best_generator.pth
     # 4x GRL (Default):     python test_code/inference.py --model GRL --scale 4 --downsample_threshold 1080 --weight_path pretrained/4x_APISR_GRL_GAN_generator.pth
+    # 4X DAT:               python test_code/inference.py --model DAT --scale 4 --downsample_threshold 720 --weight_path saved_models/dat_best_generator.pth
     # 2x RRDB:              python test_code/inference.py --model RRDB --scale 2 --downsample_threshold 1080 --weight_path pretrained/2x_APISR_RRDB_GAN_generator.pth
+    
 
 
     # Read argument and prepare the folder needed

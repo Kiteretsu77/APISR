@@ -185,20 +185,19 @@ def load_dat(generator_weight_PATH, scale=4):
     if 'model_state_dict' in checkpoint_g:
         weight = checkpoint_g['model_state_dict']
 
-        # GRL tiny model (Note: tiny2 version)
-        generator = DAT(
-                        upscale=scale,
-                        in_chans=3,
-                        img_size=64,
-                        img_range=1.,
-                        depth=[18],
-                        embed_dim=60,
-                        num_heads=[6],
-                        expansion_factor=2,
-                        resi_connection='3conv',
-                        split_size=[8,32],
-                        upsampler='pixelshuffledirect',
-                    ).cuda()
+        # DAT small model in default
+        generator = DAT(upscale = 4,
+                        in_chans = 3,
+                        img_size = 64,
+                        img_range = 1.,
+                        depth = [6, 6, 6, 6, 6, 6],
+                        embed_dim = 180,
+                        num_heads = [6, 6, 6, 6, 6, 6],
+                        expansion_factor = 2,
+                        resi_connection = '1conv',
+                        split_size = [8, 16],
+                        upsampler = 'pixelshuffledirect',
+                        ).cuda()
 
     else:
         print("This weight is not supported")

@@ -6,7 +6,7 @@ opt = {}
 ##################################################### Frequently Changed Setting ###########################################################
 opt['description'] = "4x_DAT_small"        # Description to add to the log  
 
-opt['architecture'] = "DAT"                # "ESRNET" || "ESRGAN" || "GRL" || "GRLGAN" (GRL only support 4x) || "DAT" || "DATGAN"
+opt['architecture'] = "DATGAN"                # "ESRNET" || "ESRGAN" || "GRL" || "GRLGAN" (GRL only support 4x) || "DAT" || "DATGAN"
 
 
 # Essential Setting
@@ -14,14 +14,14 @@ opt['scale'] = 4                                                    # In default
 opt["full_patch_source"] = "../datasets_anime/APISR_dataset"        # The HR image without cropping 
 opt["degrade_hr_dataset_path"] = "datasets/train_hr"                # The cropped GT images
 opt["train_hr_dataset_path"] = "datasets/train_hr_enhanced"         # The cropped Pseudo-GT path (after hand-drawn line enhancement)
-################################################################################################################################
+############################################################################################################################################
 
 # GPU setting
 opt['CUDA_VISIBLE_DEVICES'] = '0'               # '0' / '1' based on different GPU you have or you can use CUDA_VISIBLE_DEVICES=1 for linux
 os.environ['CUDA_VISIBLE_DEVICES'] = opt['CUDA_VISIBLE_DEVICES']  
 
 
-##################################################### Setting for General Training #############################################
+##################################################### Setting for General Training ##########################################################
 
 # Dataset Setting
 opt["lr_dataset_path"] = "datasets/train_lr"    # Where you temporally store the LR synthetic images
@@ -43,12 +43,12 @@ opt['degradate_generation_freq'] = 1     # How frequent we degradate HR to LR (1
 opt['train_dataloader_workers'] = 5      # Number of workers for DataLoader
 opt['checkpoints_freq'] = 50             # frequency to store checkpoints in the folder (unit: epoch)
 
-#################################################################################################################################
+#############################################################################################################################################
 
 
 
 
-###################################################### Model Specific Setting ###################################################
+###################################################### Model Specific Setting ###############################################################
 
 # Add setting for different architecture (Please go through the model architecture you want!)
 if opt['architecture'] == "GRL":             # L1 loss training version
@@ -125,6 +125,7 @@ elif opt['architecture'] == "ESRGAN":
 
 
 elif opt['architecture'] == "DAT":           # L1 loss training version
+    
     # Setting for DAT Training 
     opt['model_size'] = "small"              # "light" || "small"
     
@@ -132,15 +133,18 @@ elif opt['architecture'] == "DAT":           # L1 loss training version
     opt['train_batch_size'] = 12             # For 4x, light can have 32 batch size; small can have    batch size
     
     # Learning Rate
-    opt["start_learning_rate"] = 0.0002      # Training Epoch, use the as Real-ESRGAN: 0.0001 - 0.0002 is ok, based on your need
-    opt['decay_iteration'] = 140000          # Decay iteration  
+    opt["start_learning_rate"] = 0.0001      # Training Epoch, use the as Real-ESRGAN: 0.0001 - 0.0002 is ok, based on your need
+    opt['decay_iteration'] = 100000          # Decay iteration  
     opt['double_milestones'] = []            # Iteration based time you double your learning rate (Just ignore this one)
 
 elif opt['architecture'] == "DATGAN":         # L1 + Preceptual + Discriminator Loss version
+    
+    # Setting for DATGAN Training 
+    opt['model_size'] = "small"              # "light" || "small"
 
-    # Setting for DAT-GAN Traning
+    # Setting for DAT-GAN Training
     opt['train_iterations'] = 300000         # Training Iterations
-    opt['train_batch_size'] = 32             # 4x: 32 batch size (for 256x256); 2x: 4        
+    opt['train_batch_size'] = 12             # 4x: 32 batch size (for 256x256); 2x: 4        
     
     # Learning Rate
     opt["start_learning_rate"] = 0.0001      # Training Epoch, use the as Real-ESRGAN: 0.0001 - 0.0002 is ok, based on your need
@@ -256,7 +260,7 @@ opt["avif_quality_range1"] = [30, 100]
 opt["avif_encode_speed1"] = [0, 6]          # Useless now
 
 
-######################################## Setting for Degradation with Intra-Prediction ########################################
+######################################## Setting for Degradation with Intra-Prediction ###############################################################################
 opt['compression_codec2'] = ["jpeg", "webp", "avif", "mpeg2", "mpeg4", "h264", "h265"]     # Compression codec: similar to VCISR but more intense degradation settings
 opt['compression_codec_prob2'] = [0.06, 0.1, 0.1, 0.12, 0.12, 0.3, 0.2] 
 
@@ -286,5 +290,5 @@ opt['mpeg4_quality2'] = [8, 31]         #  should be the same as mpeg2_quality2
 opt['mpeg4_preset_mode2'] = ["slow", "medium", "fast", "faster", "superfast"]
 opt['mpeg4_preset_prob2'] = [0.05, 0.35, 0.3, 0.2, 0.1]
 
-#################################################################################################################################################################
+####################################################################################################################################################################
 

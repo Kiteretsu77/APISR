@@ -47,6 +47,22 @@ class train_datgan(train_master):
                 upsampler='pixelshuffledirect',
             ).cuda()
 
+        elif opt['model_size'] == "small":
+            # DAT small model 11.21M param
+            self.generator = DAT(
+                upscale=4,
+                in_chans=3,
+                img_size=64,
+                img_range=1.,
+                depth=[6,6,6,6,6,6],
+                embed_dim=180,
+                num_heads=[6,6,6,6,6,6],
+                expansion_factor=2,
+                resi_connection='1conv',
+                split_size=[8,16],
+                upsampler='pixelshuffledirect',
+            ).cuda()
+            
         else:
             raise NotImplementedError("We don't support such model size in DAT model")
 
