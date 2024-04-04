@@ -113,7 +113,7 @@ python gradio_apisr.py
 ## <a name="dataset_curation"></a> Dataset Curation 🧩
 Our dataset curation pipeline is under **dataset_curation_pipeline** folder. 
 
-You can collect your own dataset by sending videos into the pipeline and get the least compressed and the most informative images from the video sources. 
+You can collect your own dataset by sending videos (mp4 or other format) into the pipeline and get the least compressed and the most informative images from the video sources. 
 
 1.  Download [IC9600](https://github.com/tinglyfeng/IC9600?tab=readme-ov-file) weight (ck.pth) from https://drive.google.com/drive/folders/1N3FSS91e7FkJWUKqT96y_zcsG9CRuIJw and place it at "pretrained/" folder (else, you can define a different **--IC9600_pretrained_weight_path** in the following collect.py execution)
 
@@ -131,7 +131,7 @@ You can collect your own dataset by sending videos into the pipeline and get the
     
     But in order to create a natural input for prediction-oriented compression, in every epoch, the degradation started from the uncropped GT (**full_patch_source**), and LR synthetic images are concurrently stored. The cropped HR GT dataset (**degrade_hr_dataset_path**) and cropped pseudo-GT (**train_hr_dataset_path**) are fixed in the dataset preparation stage and won't be modified during training.
 
-    Be careful to check if there is any OOM. If there is, it will be impossible to get correct dataset preparation. Usually, this is because **num_workers** in **scripts/anime_strong_usm.py** is too big!
+    Be careful to check if there is any OOM. If there is, it will be impossible to get the correct dataset preparation. Usually, this is because **num_workers** in **scripts/anime_strong_usm.py** is too big!
     ```shell
     bash scripts/prepare_datasets.sh
     ```
@@ -143,7 +143,7 @@ You can collect your own dataset by sending videos into the pipeline and get the
 
 **The whole training process can be done in one RTX3090/4090!**
 
-1. Prepare a dataset (AVC/API) which follows step 2 & 3 in [**Dataset Curation**](#dataset_curation)
+1. Prepare a dataset ([AVC](https://github.com/TencentARC/AnimeSR?tab=readme-ov-file#request-for-avc-dataset) / API) that is preprocessed by STEP 2 & 3 in [**Dataset Curation**](#dataset_curation)
 
     In total, you will have 3 folders prepared before executing the following commands: 
 
