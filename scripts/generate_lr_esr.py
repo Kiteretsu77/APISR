@@ -181,7 +181,7 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input', type=str, default = opt["full_patch_source"], help='Input folder')
+    parser.add_argument('--input', type=str, default = opt["uncropped_hr"], help='Input folder')
     parser.add_argument('--output', type=str, default = opt["lr_dataset_path"], help='Output folder')
     args = parser.parse_args()
 

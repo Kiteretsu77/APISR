@@ -111,8 +111,8 @@ class train_master(object):
 
         # Preceptual Loss
         self.cri_pix = torch.nn.L1Loss().cuda()
-        self.cri_vgg_perceptual = PerceptualLoss(self.options['train_perceptual_layer_weights'], vgg_type, perceptual_weight=self.options["vgg_perceptual_loss_weight"]).cuda()
-        self.cri_danbooru_perceptual = Anime_PerceptualLoss(self.options["Danbooru_layer_weights"], perceptual_weight=self.options["danbooru_perceptual_loss_weight"]).cuda()
+        self.cri_vgg_perceptual = PerceptualLoss(self.options['vgg_perceptual_layer_weights'], vgg_type, perceptual_weight=self.options["vgg_perceptual_loss_weight"]).cuda()
+        self.cri_danbooru_perceptual = Anime_PerceptualLoss(self.options["danbooru_layer_weights"], perceptual_weight=self.options["danbooru_perceptual_loss_weight"]).cuda()
 
         # GAN loss
         if self.options['discriminator_type'] == "PatchDiscriminator":

@@ -125,11 +125,11 @@ You can collect your own dataset by sending videos (mp4 or other format) into th
 
 3. Once you get an image dataset with various aspect ratios and resolutions, you can run the following scripts
 
-    Be careful to check **full_patch_source** && **degrade_hr_dataset_path** && **train_hr_dataset_path** (we will use these path in **opt.py** setting during training stage)
+    Be careful to check **uncropped_hr** && **degrade_hr_dataset_path** && **train_hr_dataset_path** (we will use these path in **opt.py** setting during training stage)
 
     In order to decrease memory utilization and increase training efficiency, we pre-process all time-consuming pseudo-GT (**train_hr_dataset_path**) at the dataset preparation stage. 
     
-    But in order to create a natural input for prediction-oriented compression, in every epoch, the degradation started from the uncropped GT (**full_patch_source**), and LR synthetic images are concurrently stored. The cropped HR GT dataset (**degrade_hr_dataset_path**) and cropped pseudo-GT (**train_hr_dataset_path**) are fixed in the dataset preparation stage and won't be modified during training.
+    But in order to create a natural input for prediction-oriented compression, in every epoch, the degradation started from the uncropped GT (**uncropped_hr**), and LR synthetic images are concurrently stored. The cropped HR GT dataset (**degrade_hr_dataset_path**) and cropped pseudo-GT (**train_hr_dataset_path**) are fixed in the dataset preparation stage and won't be modified during training.
 
     Be careful to check if there is any OOM. If there is, it will be impossible to get the correct dataset preparation. Usually, this is because **num_workers** in **scripts/anime_strong_usm.py** is too big!
     ```shell
@@ -147,7 +147,7 @@ You can collect your own dataset by sending videos (mp4 or other format) into th
 
     In total, you will have 3 folders prepared before executing the following commands: 
 
-    --> **full_patch_source**: uncropped GT
+    --> **uncropped_hr**: uncropped GT
 
     --> **degrade_hr_dataset_path**: cropped GT
     

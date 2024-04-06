@@ -11,7 +11,7 @@ opt['architecture'] = "GRL"                # "ESRNET" || "ESRGAN" || "GRL" || "G
 
 # Essential Setting
 opt['scale'] = 4                                                    # In default, this is 4x
-opt["full_patch_source"] = "../datasets_anime/APISR_dataset"        # The HR image without cropping 
+opt["uncropped_hr"] = "datasets/APISR_720p_4xcrop"        # The HR image without cropping 
 opt["degrade_hr_dataset_path"] = "datasets/train_hr"                # The cropped GT images
 opt["train_hr_dataset_path"] = "datasets/train_hr_enhanced"         # The cropped Pseudo-GT path (after hand-drawn line enhancement)
 ############################################################################################################################################
@@ -67,7 +67,7 @@ elif opt['architecture'] == "GRLGAN":        # L1 + Preceptual + Discriminator L
     # Setting for GRL Training
     opt['model_size'] = "tiny2"              # "small" || "tiny" || "tiny2"  (Use tiny2 by default, No need to change)
 
-    # Setting for GRL-GAN Traning
+    # Setting for GRL-GAN Training
     opt['train_iterations'] = 300000         # Training Iterations
     opt['train_batch_size'] = 32             # 4x: 32 batch size (for 256x256); 2x: 4        
     
@@ -78,10 +78,11 @@ elif opt['architecture'] == "GRLGAN":        # L1 + Preceptual + Discriminator L
     
     # Perceptual loss
     opt["danbooru_perceptual_loss_weight"] = 0.5        # ResNet50 Danbooru Perceptual loss weight scale
+    opt['danbooru_layer_weights'] = {"0": 0.1, "4_2_conv3": 20, "5_3_conv3": 25, "6_5_conv3": 1, "7_2_conv3": 1}            # Middle-Layer weight for ResNet
+
     opt["vgg_perceptual_loss_weight"] = 0.5             # VGG PhotoRealistic Perceptual loss weight scale
     opt['train_perceptual_vgg_type'] = 'vgg19'          # VGG16/19 (Just use 19 by default)
-    opt['train_perceptual_layer_weights'] = {'conv1_2': 0.1, 'conv2_2': 0.1, 'conv3_4': 1, 'conv4_4': 1, 'conv5_4': 1}      # Middle-Layer weight for VGG
-    opt['Danbooru_layer_weights'] = {"0": 0.1, "4_2_conv3": 20, "5_3_conv3": 25, "6_5_conv3": 1, "7_2_conv3": 1}            # Middle-Layer weight for ResNet
+    opt['vgg_perceptual_layer_weights'] = {'conv1_2': 0.1, 'conv2_2': 0.1, 'conv3_4': 1, 'conv4_4': 1, 'conv5_4': 1}      # Middle-Layer weight for VGG
     
     # GAN loss
     opt["discriminator_type"] = "PatchDiscriminator"        # "PatchDiscriminator" || "UNetDiscriminator" 
@@ -114,10 +115,11 @@ elif opt['architecture'] == "ESRGAN":
     
     # Perceptual loss
     opt["danbooru_perceptual_loss_weight"] = 0.5        # ResNet50 Danbooru Perceptual loss weight scale
+    opt['danbooru_layer_weights'] = {"0": 0.1, "4_2_conv3": 20, "5_3_conv3": 25, "6_5_conv3": 1, "7_2_conv3": 1}            # Middle-Layer weight for ResNet
+
     opt["vgg_perceptual_loss_weight"] = 0.5             # VGG PhotoRealistic Perceptual loss weight scale
     opt['train_perceptual_vgg_type'] = 'vgg19'          # VGG16/19 (Just use 19 by default)
-    opt['train_perceptual_layer_weights'] = {'conv1_2': 0.1, 'conv2_2': 0.1, 'conv3_4': 1, 'conv4_4': 1, 'conv5_4': 1}      # Middle-Layer weight for VGG
-    opt['Danbooru_layer_weights'] = {"0": 0.1, "4_2_conv3": 20, "5_3_conv3": 25, "6_5_conv3": 1, "7_2_conv3": 1}            # Middle-Layer weight for ResNet
+    opt['vgg_perceptual_layer_weights'] = {'conv1_2': 0.1, 'conv2_2': 0.1, 'conv3_4': 1, 'conv4_4': 1, 'conv5_4': 1}      # Middle-Layer weight for VGG
     
     # GAN loss
     opt["discriminator_type"] = "PatchDiscriminator"        # "PatchDiscriminator" || "UNetDiscriminator" 
@@ -153,10 +155,11 @@ elif opt['architecture'] == "DATGAN":         # L1 + Preceptual + Discriminator 
     
     # Perceptual loss
     opt["danbooru_perceptual_loss_weight"] = 0.5        # ResNet50 Danbooru Perceptual loss weight scale
+    opt['danbooru_layer_weights'] = {"0": 0.1, "4_2_conv3": 20, "5_3_conv3": 25, "6_5_conv3": 1, "7_2_conv3": 1}            # Middle-Layer weight for ResNet
+
     opt["vgg_perceptual_loss_weight"] = 0.5             # VGG PhotoRealistic Perceptual loss weight scale
     opt['train_perceptual_vgg_type'] = 'vgg19'          # VGG16/19 (Just use 19 by default)
-    opt['train_perceptual_layer_weights'] = {'conv1_2': 0.1, 'conv2_2': 0.1, 'conv3_4': 1, 'conv4_4': 1, 'conv5_4': 1}      # Middle-Layer weight for VGG
-    opt['Danbooru_layer_weights'] = {"0": 0.1, "4_2_conv3": 20, "5_3_conv3": 25, "6_5_conv3": 1, "7_2_conv3": 1}            # Middle-Layer weight for ResNet
+    opt['vgg_perceptual_layer_weights'] = {'conv1_2': 0.1, 'conv2_2': 0.1, 'conv3_4': 1, 'conv4_4': 1, 'conv5_4': 1}      # Middle-Layer weight for VGG
     
     # GAN loss
     opt["discriminator_type"] = "PatchDiscriminator"        # "PatchDiscriminator" || "UNetDiscriminator" 
@@ -174,20 +177,27 @@ elif opt['architecture'] == "CUNET":
 
 
 elif opt['architecture'] == "CUGAN":
-    # Setting for ESRGAN Training 
-    opt['ESR_blocks_num'] = 6                # How many RRDB blocks you need
-    opt['train_iterations'] = 200000         # Training Iterations
-    opt['train_batch_size'] = 16        
+
+    # Setting for CUGAN Training
+    opt['train_iterations'] = 300000         # Training Iterations
+    opt['train_batch_size'] = 12             # 4x: 32 batch size (for 256x256); 2x: 4        
+    
+    # Learning Rate
     opt["start_learning_rate"] = 0.0001      # Training Epoch, use the as Real-ESRGAN: 0.0001 - 0.0002 is ok, based on your need
+    opt['decay_iteration'] = 100000          # Fixed decay gap
+    opt['double_milestones'] = []            # Just put this empty
+    
+    # Perceptual loss
+    opt["danbooru_perceptual_loss_weight"] = 0.5        # ResNet50 Danbooru Perceptual loss weight scale
+    opt['danbooru_layer_weights'] = {"0": 0.1, "4_2_conv3": 20, "5_3_conv3": 25, "6_5_conv3": 1, "7_2_conv3": 1}            # Middle-Layer weight for ResNet
 
-    opt["perceptual_loss_weight"] = 1.0
-    opt['train_perceptual_vgg_type'] = 'vgg19'
-    opt['train_perceptual_layer_weights'] = {'conv1_2': 0.1, 'conv2_2': 0.1, 'conv3_4': 1, 'conv4_4': 1, 'conv5_4': 1}
-    opt['Danbooru_layer_weights'] = {"0": 0.1, "4_2_conv3": 20, "5_3_conv3": 25, "6_5_conv3": 1, "7_2_conv3": 1}            # Middle-Layer weight for ResNet
-    opt["gan_loss_weight"] = 0.2   # This one is very important, Don't neglect it. Based on the paper, it should be 0.1 scale
-
-    opt['decay_iteration'] = 100000                              # Decay iteration  
-    opt['double_milestones'] = []            # Iteration based time you double your learning rate
+    opt["vgg_perceptual_loss_weight"] = 0.5             # VGG PhotoRealistic Perceptual loss weight scale
+    opt['train_perceptual_vgg_type'] = 'vgg19'          # VGG16/19 (Just use 19 by default)
+    opt['vgg_perceptual_layer_weights'] = {'conv1_2': 0.1, 'conv2_2': 0.1, 'conv3_4': 1, 'conv4_4': 1, 'conv5_4': 1}      # Middle-Layer weight for VGG
+    
+    # GAN loss
+    opt["discriminator_type"] = "PatchDiscriminator"        # "PatchDiscriminator" || "UNetDiscriminator" 
+    opt["gan_loss_weight"] = 0.2    
 
     
 else:
