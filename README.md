@@ -92,7 +92,7 @@ Online demo can be found at https://huggingface.co/spaces/HikariDawn/APISR (Hugg
 
 Local Gradio can be created by running the following:
 ```shell
-python gradio_apisr.py
+python app.py
 ```
 
 **Note:** Gradio is designed for fast inference, so we will automatically download existing weights and downsample to 720P to ease the VRAM consumption. For a full grounder inference, please check the regular inference section below.
