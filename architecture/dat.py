@@ -2,6 +2,7 @@
     DAT network from https://github.com/zhengchen1999/DAT (https://openaccess.thecvf.com/content/ICCV2023/papers/Chen_Dual_Aggregation_Transformer_for_Image_Super-Resolution_ICCV_2023_paper.pdf)
 '''
 
+import time
 import torch
 import torch.nn as nn
 import torch.utils.checkpoint as checkpoint
@@ -868,22 +869,37 @@ if __name__ == '__main__':
     upscale = 1
     height = 64
     width = 64
-    model = DAT(upscale=4,
+    model = DAT(
+                upscale=4,
                 in_chans=3,
                 img_size=64,
                 img_range=1.,
-                depth=[18],
-                embed_dim=60,
-                num_heads=[6],
+                depth=[6,6,6,6,6,6],
+                embed_dim=180,
+                num_heads=[6,6,6,6,6,6],
                 expansion_factor=2,
-                resi_connection='3conv',
-                split_size=[8,32],
+                resi_connection='1conv',
+                split_size=[8,16],
                 upsampler='pixelshuffledirect',
-                ).cuda().eval()
+            ).cuda().eval()
 
-    print(height, width)
 
-    x = torch.randn((1, 3, height, width)).cuda()
-    x = model(x)
+    # Parameter analysis
+    num_params = 0
+    for p in model.parameters():
+        if p.requires_grad:
+            num_params += p.numel()
+    print(f"Number of parameters {num_params / 10 ** 6: 0.2f}")
 
-    print(x.shape)
+
+    # Count the number of FLOPs to double check
+    with torch.no_grad():
+        input = torch.randn((1, 3, 256, 256)).cuda()
+        output = model(input)   # Calculate for the first time to avoid initial time delay
+
+        start = time.time()
+        for _ in range(20):     # Take the average of 20 times
+            output = model(input)
+        print("output size is ", output.shape)
+        total_time = time.time() - start
+    print("Average time spent is ", total_time/20)

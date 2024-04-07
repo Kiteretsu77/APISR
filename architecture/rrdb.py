@@ -199,19 +199,23 @@ def main():
     from torchsummary import summary
     import time
     
-    # We use RRDB 6Blocks by default.
-    model = RRDBNet(3, 3).cuda()
-    pytorch_total_params = sum(p.numel() for p in model.parameters())
-    print(f"RRDB has param {pytorch_total_params//1000} K params")
+    # We use RRDB 6 Blocks by default
+    model = RRDBNet(3, 3, scale=2).cuda()
+    num_params = sum(p.numel() for p in model.parameters())
+    print(f"Number of parameters {num_params / 10 ** 6: 0.2f}")
 
 
     # Count the number of FLOPs to double check
-    x = torch.randn((1, 3, 180, 180)).cuda()
-    start = time.time()
-    x = model(x)
-    print("output size is ", x.shape)
-    total = time.time() - start
-    print(total)
+    with torch.no_grad():
+        input = torch.randn((1, 3, 256, 256)).cuda()
+        output = model(input)   # Calculate for the first time to avoid initial time delay
+
+        start = time.time()
+        for _ in range(20):     # Take the average of 20 times
+            output = model(input)
+        print("output size is ", output.shape)
+        total_time = time.time() - start
+    print("Average time spent is ", total_time/20)
 
 
 if __name__ == "__main__":

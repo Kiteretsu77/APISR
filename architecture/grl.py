@@ -4,7 +4,9 @@ Image restoration transformers with global, regional, and local modelling
 A clean version of the.
 Shared buffers are used for relative_coords_table, relative_position_index, and attn_mask.
 """
+
 import cv2
+import time
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -579,6 +581,7 @@ class GRL(nn.Module):
 
 
 if __name__ == "__main__":
+    
     # The version of GRL we use
     model = GRL(
                 upscale = 4,
@@ -603,14 +606,17 @@ if __name__ == "__main__":
         if p.requires_grad:
             num_params += p.numel()
     print(f"Number of parameters {num_params / 10 ** 6: 0.2f}")
-    
-    # Print param
-    for name, param in model.named_parameters():
-        print(name, param.dtype)
         
 
     # Count the number of FLOPs to double check
-    x = torch.randn((1, 3, 180, 180)).cuda()        # Don't use input size that is too big (we don't have @torch.no_grad here)
-    x = model(x)
-    print("output size is ", x.shape)
+    with torch.no_grad():
+        input = torch.randn((1, 3, 256, 256)).cuda()
+        output = model(input)   # Calculate for the first time to avoid initial time delay
+
+        start = time.time()
+        for _ in range(20):     # Take the average of 20 times
+            output = model(input)
+        print("output size is ", output.shape)
+        total_time = time.time() - start
+    print("Average time spent is ", total_time/20)
 
