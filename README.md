@@ -55,8 +55,9 @@ APISR is an upscaler that aims at restoring and enhancing low-quality low-resolu
 - [x] Release Paper version implementation of APISR 
 - [x] Release different upscaler factor weight (for 2x, 4x and more)
 - [x] Gradio demo (with online)
-- [ ] Provide weight with different architecture
+- [x] Provide weight with different architecture (DAT-Small)
 - [ ] Create a Project Page
+- [ ] Some Online Demo for Chinese users && Readme in Chinese
 
 
 
@@ -113,7 +114,7 @@ python app.py
 ## <a name="dataset_curation"></a> Dataset Curation 🧩
 Our dataset curation pipeline is under **dataset_curation_pipeline** folder. 
 
-You can collect your own dataset by sending videos (mp4 or other format) into the pipeline and get the least compressed and the most informative images from the video sources. 
+You can collect your dataset by sending videos (mp4 or other format) into the pipeline and get the least compressed and the most informative images from the video sources. 
 
 1.  Download [IC9600](https://github.com/tinglyfeng/IC9600?tab=readme-ov-file) weight (ck.pth) from https://drive.google.com/drive/folders/1N3FSS91e7FkJWUKqT96y_zcsG9CRuIJw and place it at "pretrained/" folder (else, you can define a different **--IC9600_pretrained_weight_path** in the following collect.py execution)
 
@@ -129,7 +130,7 @@ You can collect your own dataset by sending videos (mp4 or other format) into th
 
     In order to decrease memory utilization and increase training efficiency, we pre-process all time-consuming pseudo-GT (**train_hr_dataset_path**) at the dataset preparation stage. 
     
-    But in order to create a natural input for prediction-oriented compression, in every epoch, the degradation started from the uncropped GT (**uncropped_hr**), and LR synthetic images are concurrently stored. The cropped HR GT dataset (**degrade_hr_dataset_path**) and cropped pseudo-GT (**train_hr_dataset_path**) are fixed in the dataset preparation stage and won't be modified during training.
+    But, in order to create a natural input for prediction-oriented compression, in every epoch, the degradation started from the uncropped GT (**uncropped_hr**), and LR synthetic images are concurrently stored. The cropped HR GT dataset (**degrade_hr_dataset_path**) and cropped pseudo-GT (**train_hr_dataset_path**) are fixed in the dataset preparation stage and won't be modified during training.
 
     Be careful to check if there is any OOM. If there is, it will be impossible to get the correct dataset preparation. Usually, this is because **num_workers** in **scripts/anime_strong_usm.py** is too big!
     ```shell
@@ -219,4 +220,4 @@ If you develop/use APISR in your projects, welcome to let me know. I will write 
 - [danbooru-pretrained](https://github.com/RF5/danbooru-pretrained): Our Anime Dataset (Danbooru) pretrained RESNET50 model.
 - [Jupyter Demo](https://github.com/camenduru/APISR-jupyter): The jupter notebook demo is from [camenduru](https://github.com/camenduru).
 - [AVIF&HEIF](https://github.com/bigcat88/pillow_heif): The degradation of AVIF and HEFI is from pillow_heif.
-
+- [DAT](https://github.com/zhengchen1999/DAT): The DAT architecture we use for 4x scaling in model zoo is coming from this [link](https://github.com/zhengchen1999/DAT).
