@@ -192,7 +192,7 @@ Please cite us if our work is useful for your research.
 ```
 
 ## Disclaimer
-This project is released for academic use only. We disclaim responsibility for the distribution of the dataset. Users are solely liable for their actions. 
+This project is released for academic use only. We disclaim responsibility for the distribution of the model weight and sample images. Users are solely liable for their actions. 
 The project contributors are not legally affiliated with, nor accountable for, users' behaviors.
 
 
