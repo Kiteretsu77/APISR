@@ -16,7 +16,7 @@ APISR is an upscaler that aims at restoring and enhancing low-quality low-resolu
 </p>
 
 
-:star: If you like APISR, please help star this repo. Thanks! :hugs:
+:star: **If you like APISR, please help star this repo. Thanks!** :hugs:
 
 
 
