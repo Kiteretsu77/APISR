@@ -4,6 +4,7 @@
 - [Diverse Upscaler Architecture](#for-diverse-upscaler)
 
 
+Visual Comparisons between models can be found [here](https://imgsli.com/MjU0MjI0). I would say that, currently, I prefer 4XDAT model (but more computational intensive).
 
 ## Paper Weight
 The time we calculated is based on our device (3090Ti) with input 256x256 (without half precision or any other acceleration). This is only a reference, so it's better to focus on the **relative process time difference** between different models and different scaling factors.
