@@ -56,8 +56,10 @@ APISR is an upscaler that aims at restoring and enhancing low-quality low-resolu
 - [x] Release different upscaler factor weight (for 2x, 4x and more)
 - [x] Gradio demo (with online)
 - [x] Provide weight with different architecture (DAT-Small)
+- [ ] Add the result combined with Toon Crafter
+- [ ] Release the weight trained with Diffusion Generated Images
 - [ ] Create a Project Page
-- [ ] Some Online Demo for Chinese users && Readme in Chinese
+- [ ] Some Online Demo for Chinese users && README in Chinese
 
 
 
