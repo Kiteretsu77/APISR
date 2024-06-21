@@ -3,10 +3,15 @@
 '''
 import argparse
 import time
+import numpy as np
 import os, sys, cv2, shutil, warnings
+from tqdm import tqdm
 import torch
 from torchvision.transforms import ToTensor
 from torchvision.utils import save_image
+import ffmpegcv
+from moviepy.video.io.ffmpeg_writer import FFMPEG_VideoWriter
+from moviepy.editor import VideoFileClip
 warnings.simplefilter("default")
 os.environ["PYTHONWARNINGS"] = "default"
 
@@ -59,7 +64,7 @@ def super_resolve_img(generator, input_path, output_path=None, weight_dtype=torc
     
     
     # Model inference
-    print("lr shape is ", img_lr.shape)
+    # print("lr shape is ", img_lr.shape)
     super_resolved_img = generator(img_lr)
 
     # Store the generated result
@@ -71,6 +76,97 @@ def super_resolve_img(generator, input_path, output_path=None, weight_dtype=torc
     torch.cuda.empty_cache() 
     
     return super_resolved_img
+
+
+
+@torch.no_grad
+def super_resolve_video(generator, input_path, output_path, scale, weight_dtype=torch.float32, downsample_threshold=-1, crop_for_4x=True):
+
+    # Default setting 
+    encode_params = ['-crf', '32', '-preset', 'medium']   # This is one of the best setting I used to use
+    
+    # Read the video path
+    objVideoReader = VideoFileClip(filename=input_path)
+
+    
+    # Obtain basic video information
+    width, height = objVideoReader.reader.size
+    original_fps = objVideoReader.reader.fps
+    nframes = objVideoReader.reader.nframes
+    has_audio = objVideoReader.audio
+
+
+    # Handle the rescale
+    short_side = min(height, width)
+    if downsample_threshold != -1 and short_side > downsample_threshold:
+        rescale_factor = short_side / downsample_threshold
+    else:
+        rescale_factor = 1
+    
+
+    # Create a tmp file
+    temp_file_name = "inference_tmp"
+    if os.path.exists(temp_file_name):
+        shutil.rmtree(temp_file_name)
+    os.makedirs(temp_file_name)
+    if os.path.exists(output_path):
+        os.remove(output_path)
+    
+
+    
+    # Create a video writer
+    output_size = (int(width * scale / rescale_factor), int(height * scale / rescale_factor))
+    if has_audio:
+        objVideoReader.audio.write_audiofile(temp_file_name+"/output_audio.mp3")    # Hopefully, mp3 format is supported for all input video 
+        writer = FFMPEG_VideoWriter(output_path, output_size, original_fps, ffmpeg_params=encode_params, audiofile=temp_file_name+"/output_audio.mp3")
+    else:
+        writer = FFMPEG_VideoWriter(output_path, size=output_size, fps=original_fps, ffmpeg_params=encode_params)
+    
+    
+    # Setup Progress bar
+    progress_bar = tqdm(range(0, nframes), initial=0, desc="Frame",)
+    
+    
+    # Iterate frames from the video and super-resolve individually
+    for frame_idx, img_lr in enumerate(objVideoReader.iter_frames(fps=original_fps)):
+        
+        # Downsample if needed
+        if rescale_factor != 1:
+            img_lr = cv2.resize(img_lr, (int(width/rescale_factor), int(height/rescale_factor)), interpolation = cv2.INTER_LINEAR)
+
+        # Crop if needed
+        if crop_for_4x:
+            h, w, _ = img_lr.shape
+            if h % 4 != 0:
+                img_lr = img_lr[:4*(h//4),:,:]
+            if w % 4 != 0:
+                img_lr = img_lr[:,:4*(w//4),:]
+
+
+        # Transform to tensor
+        # img_lr = cv2.cvtColor(img_lr, cv2.COLOR_BGR2RGB)
+        img_lr = ToTensor()(img_lr).unsqueeze(0).cuda()     # Use tensor format
+        img_lr = img_lr.to(dtype=weight_dtype)
+        
+        
+        # Model inference
+        super_resolved_img = generator(img_lr)
+
+        # Post process
+        super_resolved_img = np.uint8(np.clip(torch.permute(super_resolved_img[0]*255.0, (1, 2, 0)).cpu().detach().numpy(), 0, 255))
+        # cv2.imwrite("sr_"+str(frame_idx)+".png", super_resolved_img)
+
+
+        # Write into the frame
+        writer.write_frame(super_resolved_img)
+        
+        progress_bar.update(1)
+
+    writer.close()
+
+
+    # Clean the temp file
+    shutil.rmtree(temp_file_name)
 
 
 
@@ -105,6 +201,10 @@ if __name__ == "__main__":
     scale = args.scale
     downsample_threshold = args.downsample_threshold
     float16_inference = args.float16_inference
+
+    # Some other setting
+    supported_img_extension = ['jpg', 'png', 'webp', 'jpeg']
+    supported_video_extension = ['mp4', 'mkv']
     
     
     # Check the path of the weight
@@ -142,21 +242,37 @@ if __name__ == "__main__":
     generator = generator.to(dtype=weight_dtype)
 
 
+    # Should have a for loop here
+    def inner_loop(process_dir):
+        # First, check whether this single file is image or video
+        filename = os.path.split(process_dir)[-1].split('.')[0]     # Extract the code name if the file length is too long.
+        input_extension = process_dir.split('.')[-1]
+
+        if input_extension in supported_img_extension: # If the input path is single image
+            output_path = os.path.join(store_dir, filename+"_"+str(scale)+"x.png")      # Output fixed to be png
+            # In default, we will automatically use crop to match 4x size
+            super_resolve_img(generator, process_dir, output_path, weight_dtype, downsample_threshold, crop_for_4x=True)
+        
+        elif input_extension in supported_video_extension: # If the input path is single video
+            output_path = os.path.join(store_dir, filename+"_"+str(scale)+"x.mp4")      # Output fixed to be mp4
+            super_resolve_video(generator, process_dir, output_path, scale, weight_dtype, downsample_threshold, crop_for_4x=True)
+
+        else:
+            raise NotImplementedError("This single file input format is not what we support!")
+
+
+
 
     start = time.time()
+
     # Take the input path and do inference
-    if os.path.isdir(store_dir):    # If the input is a directory, we will iterate it
+    if os.path.isdir(input_dir):        # If the input is a directory, we will iterate it
         for filename in sorted(os.listdir(input_dir)):
-            input_path = os.path.join(input_dir, filename)
-            output_path = os.path.join(store_dir, "".join(filename.split('.')[:-1])+".png")
-            # In default, we will automatically use crop to match 4x size
-            super_resolve_img(generator, input_path, output_path, weight_dtype, downsample_threshold, crop_for_4x=True)
+            inner_loop(os.path.join(input_dir, filename))
             
-    else:   # If the input is a single image, we will process it directly and write on the same folder
-        filename = os.path.split(input_dir)[-1].split('.')[0]
-        output_path = os.path.join(store_dir, filename+"_"+str(scale)+"x.png")
-        # In default, we will automatically use crop to match 4x size
-        super_resolve_img(generator, input_dir, output_path, weight_dtype, downsample_threshold, crop_for_4x=True)
+    else:   # If the input is a single file (img/video), we will process it directly and write on the same folder
+        inner_loop(input_dir)
+        
         
     end = time.time()
     print("Total inference time spent is ", end-start)
