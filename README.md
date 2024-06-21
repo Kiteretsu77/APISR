@@ -106,7 +106,7 @@ python app.py
 
 1. Download the model weight from [**model zoo**](docs/model_zoo.md) and **put the weight to "pretrained" folder**.
 
-2. Then, Execute
+2. Then, Execute (**single image/video** or a **directory mixed with images&videos** are all ok!)
     ```shell
     python test_code/inference.py --input_dir XXX  --weight_path XXX  --store_dir XXX
     ```
