@@ -186,10 +186,11 @@ You can collect your dataset by sending videos (mp4 or other format) into the pi
 ## Citation
 Please cite us if our work is useful for your research.
 ```
-@article{wang2024apisr,
+@inproceedings{wang2024apisr,
   title={APISR: Anime Production Inspired Real-World Anime Super-Resolution},
   author={Wang, Boyang and Yang, Fengyu and Yu, Xihang and Zhang, Chao and Zhao, Hanbin},
-  journal={arXiv preprint arXiv:2403.01598},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  pages={25574--25584},
   year={2024}
 }
 ```
@@ -200,7 +201,7 @@ The project contributors are not legally affiliated with, nor accountable for, u
 
 
 ## License
-This project is released under the [GPL 3.0 license](LICENSE).
+This project is released under the [GPL 3.0 license](LICENSE). Also, check the disclaimer.
 
 ## 📧 <a name="contact"></a> Contact
 If you have any questions, please feel free to contact me at hikaridawn412316@gmail.com or boyangwa@umich.edu.
