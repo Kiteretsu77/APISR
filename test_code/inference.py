@@ -83,7 +83,7 @@ def super_resolve_img(generator, input_path, output_path=None, weight_dtype=torc
 def super_resolve_video(generator, input_path, output_path, scale, weight_dtype=torch.float32, downsample_threshold=-1, crop_for_4x=True):
 
     # Default setting 
-    encode_params = ['-crf', '32', '-preset', 'medium']   # This is one of the best setting I used to use
+    encode_params = ['-crf', '26', '-preset', 'medium']   # This is one of the best setting I used to use
     
     # Read the video path
     objVideoReader = VideoFileClip(filename=input_path)
