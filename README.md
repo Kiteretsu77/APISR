@@ -7,7 +7,20 @@ APISR is an image&video upscaler that aims at restoring and enhancing low-qualit
  
 [![Arxiv](https://img.shields.io/badge/Arxiv-<COLOR>.svg)](https://arxiv.org/abs/2403.01598) &ensp; [![HF Demo](https://img.shields.io/static/v1?label=Demo&message=HuggingFace&color=orange)](https://huggingface.co/spaces/HikariDawn/APISR)  &ensp; [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/camenduru/APISR-jupyter/blob/main/APISR_jupyter.ipynb) &ensp;   [![HF Demo](https://img.shields.io/static/v1?label=Demo&message=OpenBayes%E8%B4%9D%E5%BC%8F%E8%AE%A1%E7%AE%97&color=green)](https://openbayes.com/console/public/tutorials/DZr8QYzH5LZ)  &ensp;
 
-👀 [**Visualization**](#Visualization)  **|** 🔥 [Update](#Update) **|** 🔧 [Installation](#installation) **|** 🏰 [**Model Zoo**](docs/model_zoo.md) **|** ⚡ [Inference](#inference) **|** 🧩 [Dataset Curation](#dataset_curation) **|** 💻 [Train](#train) 
+🔥 [Update](#Update) **|** 👀 [**Visualization**](#Visualization)  **|** 🔧 [Installation](#installation) **|** 🏰 [**Model Zoo**](docs/model_zoo.md) **|** ⚡ [Inference](#inference) **|** 🧩 [Dataset Curation](#dataset_curation) **|** 💻 [Train](#train) 
+
+
+## <a name="Update"></a>Update 🔥🔥🔥
+- [x] Release Paper version implementation of APISR 
+- [x] Release different upscaler factor weight (for 2x, 4x and more)
+- [x] Gradio demo (with online)
+- [x] Provide weight with different architecture (DAT-Small)
+- [x] Add the result combined with Toon Crafter
+- [ ] Release the weight trained with Diffusion Generated Images
+- [ ] Create a Project Page
+- [ ] Some Online Demo for Chinese users && README in Chinese
+
+:star: **If you like APISR, please help star this repo. Thanks!** :hugs:
 
 
 
@@ -15,8 +28,6 @@ APISR is an image&video upscaler that aims at restoring and enhancing low-qualit
     <img src="__assets__/workflow.png" style="border-radius: 15px">
 </p>
 
-
-:star: **If you like APISR, please help star this repo. Thanks!** :hugs:
 
 
 
@@ -50,17 +61,6 @@ APISR is an image&video upscaler that aims at restoring and enhancing low-qualit
 ## Toon Crafter Examples Upscale
 
 Please check [**toon_crafter_upscale**](docs/toon_crafer_example.md)
-
-
-## <a name="Update"></a>Update 🔥🔥🔥
-- [x] Release Paper version implementation of APISR 
-- [x] Release different upscaler factor weight (for 2x, 4x and more)
-- [x] Gradio demo (with online)
-- [x] Provide weight with different architecture (DAT-Small)
-- [x] Add the result combined with Toon Crafter
-- [ ] Release the weight trained with Diffusion Generated Images
-- [ ] Create a Project Page
-- [ ] Some Online Demo for Chinese users && README in Chinese
 
 
 
