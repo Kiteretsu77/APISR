@@ -60,7 +60,6 @@ class USMSharp(torch.nn.Module):
     '''
 
     def __init__(self, type, radius=50, sigma=0):
-        # 感觉radius有点大
         super(USMSharp, self).__init__()
         if radius % 2 == 0:
             radius += 1
