@@ -1,0 +1,106 @@
+[tool.poetry]
+name = "anime-enhancement"
+version = "0.1.0"
+description = "Anime-style image and video enhancement project"
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{include = "architecture"}, {include = "degradation"}, {include = "loss"}, {include = "test_code"}, {include = "train_code"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+tqdm = "^4.66.1"
+numpy = "^1.26.0"
+torchsummary = "^1.5.1"
+opencv-python = "^4.8.1.78"
+scipy = "^1.11.3"
+omegaconf = "^2.3.0"
+fairscale = "^0.4.13"
+timm = "^0.9.7"
+pandas = "^2.1.1"
+pillow = "^10.0.1"
+requests = "^2.31.0"
+pyyaml = "^6.0.1"
+kornia = "^0.7.0"
+gradio = "^4.22.0"
+moviepy = "^1.0.3"
+pyiqa = "^0.1.7"
+pthflops = "^0.4.2"
+pillow-heif = "^0.13.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+pytest-cov = "^4.1.0"
+pytest-mock = "^3.12.0"
+
+[tool.poetry.scripts]
+test = "pytest:main"
+tests = "pytest:main"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--cov=architecture",
+    "--cov=degradation",
+    "--cov=loss",
+    "--cov=test_code",
+    "--cov=train_code",
+    "--cov-branch",
+    "--cov-report=term-missing:skip-covered",
+    "--cov-report=html",
+    "--cov-report=xml",
+    "--cov-fail-under=80",
+]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+markers = [
+    "unit: marks tests as unit tests (fast, isolated)",
+    "integration: marks tests as integration tests (may require external resources)",
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+]
+
+[tool.coverage.run]
+source = ["architecture", "degradation", "loss", "test_code", "train_code"]
+branch = true
+parallel = true
+omit = [
+    "*/tests/*",
+    "*/__pycache__/*",
+    "*/site-packages/*",
+    "*/dist-packages/*",
+    "*/.venv/*",
+    "*/venv/*",
+]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+skip_covered = true
+fail_under = 80
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+[tool.coverage.xml]
+output = "coverage.xml"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
