@@ -16,9 +16,6 @@ APISR is an image&video upscaler that aims at restoring and enhancing low-qualit
 - [x] Gradio demo (with online)
 - [x] Provide weight with different architecture (DAT-Small)
 - [x] Add the result combined with Toon Crafter
-- [ ] Release the weight trained with Diffusion Generated Images
-- [ ] Create a Project Page
-- [ ] Some Online Demo for Chinese users && README in Chinese
 
 :star: **If you like APISR, please help star this repo. Thanks!** :hugs:
 
@@ -145,9 +142,10 @@ You can collect your dataset by sending videos (mp4 or other format) into the pi
 
 ## <a name="train"></a> Train 💻
 
+
 **The whole training process can be done in one RTX3090/4090!**
 
-1. Prepare a dataset ([AVC](https://github.com/TencentARC/AnimeSR?tab=readme-ov-file#request-for-avc-dataset) / API) that is preprocessed by STEP 2 & 3 in [**Dataset Curation**](#dataset_curation)
+1. Prepare a dataset ([AVC](https://github.com/TencentARC/AnimeSR?tab=readme-ov-file#request-for-avc-dataset) / [API](https://huggingface.co/datasets/HikariDawn/APISR/blob/main/README.md)) that is preprocessed by STEP 2 & 3 in [**Dataset Curation**](#dataset_curation)
 
     In total, you will have 3 folders prepared before executing the following commands: 
 
@@ -183,6 +181,11 @@ You can collect your dataset by sending videos (mp4 or other format) into the pi
 
 
 
+### Training Dataset
+Check [here](https://huggingface.co/datasets/HikariDawn/APISR/blob/main/README.md).
+
+
+
 ## Citation
 Please cite us if our work is useful for your research.
 ```
@@ -203,11 +206,12 @@ The project contributors are not legally affiliated with, nor accountable for, u
 ## License
 This project is released under the [GPL 3.0 license](LICENSE). Also, check the disclaimer.
 
-## 📧 <a name="contact"></a> Contact
+
+## <a name="contact"></a> Contact  📧 
 If you have any questions, please feel free to contact me at hikaridawn412316@gmail.com or boyangwa@umich.edu.
 
 
-## 🧩 Projects that use APISR
+## Projects that use APISR 🧩 
 
 If you develop/use APISR in your projects, welcome to let me know. I will write all of them here. Thanks!
 
@@ -218,7 +222,7 @@ If you develop/use APISR in your projects, welcome to let me know. I will write 
 
 
 
-## 🤗 Acknowledgement
+## Acknowledgement 🤗 
 - [VCISR](https://github.com/Kiteretsu77/VCISR-official): My code base is based on my previous paper (WACV 2024).
 - [IC9600](https://github.com/tinglyfeng/IC9600): The dataset curation pipeline uses IC9600 code to score image complexity level.
 - [danbooru-pretrained](https://github.com/RF5/danbooru-pretrained): Our Anime Dataset (Danbooru) pretrained RESNET50 model.
