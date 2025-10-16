@@ -145,7 +145,7 @@ You can collect your dataset by sending videos (mp4 or other format) into the pi
 
 **The whole training process can be done in one RTX3090/4090!**
 
-1. Prepare a dataset ([AVC](https://github.com/TencentARC/AnimeSR?tab=readme-ov-file#request-for-avc-dataset) / [API](https://huggingface.co/datasets/HikariDawn/APISR/blob/main/README.md)) that is preprocessed by STEP 2 & 3 in [**Dataset Curation**](#dataset_curation)
+1. Prepare a dataset ([AVC](https://github.com/TencentARC/AnimeSR?tab=readme-ov-file#request-for-avc-dataset) / [API](https://huggingface.co/datasets/HikariDawn/APISR_Dataset)) that is preprocessed by STEP 2 & 3 in [**Dataset Curation**](#dataset_curation)
 
     In total, you will have 3 folders prepared before executing the following commands: 
 
@@ -182,7 +182,7 @@ You can collect your dataset by sending videos (mp4 or other format) into the pi
 
 
 ### Training Dataset
-Check [here](https://huggingface.co/datasets/HikariDawn/APISR/blob/main/README.md).
+Check [here](https://huggingface.co/datasets/HikariDawn/APISR_Dataset).
 
 
 
